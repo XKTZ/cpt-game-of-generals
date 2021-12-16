@@ -1,0 +1,8 @@
+# Don't need idea config folter be in my git repository
+/.idea
+
+# Don't need compiled classes be in my git repository
+/out
+
+# Don't need idea configuration file be in my repository
+cpt_game_of_generals.iml
