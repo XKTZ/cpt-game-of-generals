@@ -196,7 +196,7 @@ public class XSocket implements AutoCloseable {
     }
 
     /**
-     * Method for requesting
+     * Method for requesting to the server
      *
      * @param strMsgs the message needs to send
      * @param then    the thing to do after gaining the response
@@ -212,6 +212,21 @@ public class XSocket implements AutoCloseable {
                     STR_TYPE_REQUEST, intIdOn.get(), strName, STR_SERVER_NAME,
                     String.join(STR_MESSAGE_SPLITTER, strMsgs)));
         }
+        intIdOn.incrementAndGet();
+    }
+
+    /**
+     * Method for requesting a specified destination
+     *
+     * @param strDest the destination of the client sending
+     * @param strMsgs the message needs to send
+     * @param then    the thing to do after gaining the response
+     */
+    public synchronized void request(String strDest, String[] strMsgs, Consumer<String[]> then) {
+        responseHandlers.put(intIdOn.get(), then);
+        ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
+                STR_TYPE_REQUEST, intIdOn.get(), strName, strDest,
+                String.join(STR_MESSAGE_SPLITTER, strMsgs)));
         intIdOn.incrementAndGet();
     }
 

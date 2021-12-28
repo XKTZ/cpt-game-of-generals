@@ -3,6 +3,7 @@
 
 # Don't need compiled classes be in my git repository
 /out
+/bin
 
 # Don't need idea configuration file be in my repository
 cpt_game_of_generals.iml

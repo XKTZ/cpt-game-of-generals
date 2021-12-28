@@ -1,10 +1,12 @@
 @echo off
+: Clean
 start clean.cmd
-SET pathmain=
-SET /p pathmain=Your main class path:
 : Compile
-javac -d out -sourcepath src %pathmain%
+javac -d bin -sourcepath ./src ./src/generals/main/ClientMain.java
+javac -d bin -sourcepath ./src ./src/generals/main/ServerMain.java
 : Move log into
-xcopy log "out/log/" /E/H/C/I
+xcopy log "bin/log/" /E/H/C/I
 : Move res into
-xcopy res "out/res/" /E/H/C/I
+xcopy res "bin/res/" /E/H/C/I
+
+pause

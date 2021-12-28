@@ -1,3 +1,3 @@
 @echo off
-rmdir /s/q out
+rmdir /s/q bin
 exit
