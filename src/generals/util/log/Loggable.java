@@ -30,8 +30,8 @@ public interface Loggable {
      */
     default void log(LogLevel level, String strMessage) {
         Logger[] loggers = getLoggers();
-        for (int intCnt = 0; intCnt < loggers.length; intCnt++) {
-            loggers[intCnt].log(level, strMessage);
+        for (Logger logger : loggers) {
+            logger.log(level, strMessage);
         }
     }
 

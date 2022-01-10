@@ -1,0 +1,6 @@
+- The whole game
+  - Server
+  - Client
+- Help Screen
+- **Writing the name of winner**
+- **Log**
