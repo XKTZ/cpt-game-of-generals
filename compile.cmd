@@ -4,6 +4,7 @@ start clean.cmd
 : Compile
 javac -d bin -sourcepath ./src ./src/generals/main/ClientMain.java
 javac -d bin -sourcepath ./src ./src/generals/main/ServerMain.java
+javac -d bin -sourcepath ./src ./src/generals/main/TestMain.java
 : Move log into
 xcopy log "bin/log/" /E/H/C/I
 : Move res into
