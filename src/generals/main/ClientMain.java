@@ -1,6 +1,7 @@
 package generals.main;
 
 import generals.network.XSocket;
+import generals.ui.MainFrame;
 import util.SuperSocketMaster;
 
 import java.awt.event.ActionEvent;
@@ -26,27 +27,7 @@ public class ClientMain {
     static XSocket sock;
 
     public static void main(String[] args) throws IOException {
-        sock = new XSocket(getName(), "localhost", 8888, (a, b) -> {});
-
-        sock.connect();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-        String userMessage = reader.readLine();
-
-        if (userMessage.equals("1")){
-            sock.request(arrayOf("1"), (response) -> {
-                String strResponse = response[0];
-                strResponse += "world";
-                System.out.println(strResponse);
-            });
-        } else if (userMessage.equals("2")) {
-            sock.request(arrayOf("2"), (response) -> {
-                String strResponse = response[0];
-                strResponse += "world";
-                System.out.println(strResponse);
-            });
-        }
+        new MainFrame();
     }
 
     public static String[] arrayOf(String ...arr) {
