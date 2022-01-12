@@ -9,9 +9,9 @@ import javax.swing.*;
  * @date 2022-01-10
  */
 public class TestMain {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         JFrame jf = new JFrame();
-        jf.setSize(500,500);
+        jf.setSize(500, 500);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.add(new AnimatePanel());
         jf.setLocationRelativeTo(null);

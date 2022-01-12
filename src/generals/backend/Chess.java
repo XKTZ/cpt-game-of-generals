@@ -29,6 +29,8 @@ public class Chess {
     public static final int INT_GENERAL = 14;
     public static final int INT_GENERAL_OF_THE_ARMY = 15;
 
+    public static final Chess EMPTY = new Chess(0, INT_EMPTY_SPACE);
+
     /**
      * Player of chess
      */

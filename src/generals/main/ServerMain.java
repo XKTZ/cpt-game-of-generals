@@ -25,7 +25,7 @@ public class ServerMain {
         sock.connect();
     }
 
-    public static String[] arrayOf(String ...arr) {
+    public static String[] arrayOf(String... arr) {
         return arr;
     }
 }
