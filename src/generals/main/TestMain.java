@@ -11,7 +11,7 @@ import javax.swing.*;
 public class TestMain {
     public static void main(String[] args) {
         JFrame jf = new JFrame();
-        jf.setSize(500, 500);
+        jf.setSize(1280, 720);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.add(new AnimatePanel());
         jf.setLocationRelativeTo(null);
