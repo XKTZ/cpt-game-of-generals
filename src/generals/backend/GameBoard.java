@@ -90,6 +90,8 @@ public class GameBoard {
         }
 
         switchTurn();
+
+        return true;
     }
 
     /**
