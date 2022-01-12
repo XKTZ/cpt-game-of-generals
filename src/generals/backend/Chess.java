@@ -29,12 +29,6 @@ public class Chess {
     public static final int INT_GENERAL = 14;
     public static final int INT_GENERAL_OF_THE_ARMY = 15;
 
-
-    /**
-     * Coordinate of chess
-     */
-    private Coordinate coordinate;
-
     /**
      * Player of chess
      */
@@ -48,23 +42,12 @@ public class Chess {
     /**
      * Creating chess by providing coordinate, player, and level
      *
-     * @param coordinate coordinate
      * @param intPlayer  player
      * @param intType    type
      */
-    public Chess(Coordinate coordinate, int intPlayer, int intType) {
-        this.coordinate = coordinate;
+    public Chess(int intPlayer, int intType) {
         this.intPlayer = intPlayer;
         this.intType = intType;
-    }
-
-    /**
-     * Get the coordinate
-     *
-     * @return the coordinate
-     */
-    public Coordinate getCoordinate() {
-        return coordinate;
     }
 
     /**
