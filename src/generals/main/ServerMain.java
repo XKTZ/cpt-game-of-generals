@@ -13,6 +13,7 @@ public class ServerMain {
     static XSocket sock;
 
     public static void main(String[] args) {
+
         sock = new XSocket(8888, (req, sender) -> {
             if (req[0].equals("1")) {
                 sender.accept(arrayOf("hello")); // send back to client
