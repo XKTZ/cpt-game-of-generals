@@ -11,10 +11,8 @@ import java.awt.*;
  */
 public class AnimatePanel extends JPanel {
 
-    int x = 0;
-    int y = 100;
-    int a = 400;
-    int b = 200;
+    int intX = 0;
+    int inta = 1200;
 
     /**
      * Animate panel
@@ -27,19 +25,19 @@ public class AnimatePanel extends JPanel {
     public void paint(Graphics gp) {
         super.paint(gp);
         Graphics2D g2d = (Graphics2D) gp;
-        g2d.drawString("Welcome to", x, y);
-        g2d.drawString("Games of Generals", a, b);
-        g2d.drawString("Enjoy", x, 300);
+        g2d.drawString("Welcome to", intX, 50);
+        g2d.drawString("Games of Generals", inta, 100);
+        g2d.drawString("Enjoy", intX, 150);
         try {
             Thread.sleep(200);
-            x += 20;
-            a -= 20;
+            intX += 20;
+            inta -= 20;
 
-            if (x > getWidth()) {
-                x = 0;
+            if (intX > getWidth()) {
+                intX = 0;
             }
-            if (a < 0) {
-                a = 500;
+            if (inta < 0) {
+                inta = 1200;
             }
             repaint();
         } catch (InterruptedException ex) {
