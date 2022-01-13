@@ -1,5 +1,6 @@
 package generals.backend;
 
+import java.awt.*;
 import java.util.Arrays;
 
 /**
@@ -21,7 +22,7 @@ public class GameBoard {
     /**
      * The turn on
      */
-    private int intPlayerOn = 1;
+    private int intPlayerOn = 0;
 
     /**
      * Create the game board
@@ -44,6 +45,11 @@ public class GameBoard {
      * @return success or not
      */
     public boolean move(int intPlayer, int intXOn, int intYOn, int intXTo, int intYTo) {
+        // if the player on is 0, meaning game not started yet, check by another way
+        if (getPlayerOn() == 0) {
+            return moveBeforeStart(intPlayer, intXOn, intYOn, intXTo, intYTo);
+        }
+
         // check: if it is not player's turn
         // check: if position going is valid
         // check: if it is an available move, |xon - xto| + |yon - yto| must = 1
@@ -87,10 +93,46 @@ public class GameBoard {
         // if chess < chess move to, it got killed
         else {
             board[intXOn][intYOn] = Chess.EMPTY;
+            board[intXTo][intYTo] = chess;
         }
 
         switchTurn();
 
+        return true;
+    }
+
+    /**
+     * before the turn, move {intX, intY} to {intXTo, intYTo}
+     *
+     * @param intX   intX
+     * @param intY   intY
+     * @param intXTo intXTo
+     * @param intYTo intYTo
+     * @return
+     */
+    public boolean moveBeforeStart(int intPlayer, int intX, int intY, int intXTo, int intYTo) {
+        // if the player is 1, allow to move intX <= 3
+        if (intPlayer == 1) {
+            if (!(inRange(intX, 1, 3) && inRange(intXTo, 1, 3)
+                    && inRange(intY, 1, INT_COLS) && inRange(intYTo, 1, INT_COLS))) {
+                return false;
+            }
+        }
+        // if player is 2, allow to move intX >= 6
+        else {
+            if (!(inRange(intX, 6, INT_ROWS) && inRange(intXTo, 6, INT_ROWS)
+                    && inRange(intY, 1, INT_COLS) && inRange(intYTo, 1, INT_COLS))) {
+                return false;
+            }
+        }
+        // check if there is chess at the position moving to and if there is a chess at position moving from
+        if (board[intX][intY].getType() == Chess.INT_EMPTY_SPACE
+                || board[intXTo][intYTo].getType() != Chess.INT_EMPTY_SPACE) {
+            return false;
+        }
+        // move the chess
+        board[intXTo][intYTo] = board[intX][intY];
+        board[intX][intY] = Chess.EMPTY;
         return true;
     }
 
@@ -105,15 +147,101 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Get the player on turn
+     *
+     * @return the player on
+     */
     public int getPlayerOn() {
         return intPlayerOn;
     }
 
     /**
-     * check if position {intX, int Y} is valid
+     * Check the winner
+     *
+     * @return the winner
+     */
+    public int checkWinner() {
+        // check if player 1's flag reaches bottom or player 2's flag reaches top
+        for (int intCol = 0; intCol < INT_COLS; intCol++) {
+            if (board[INT_ROWS][intCol].getPlayer() == 1 && board[INT_ROWS][intCol].getType() == Chess.INT_FLAG) {
+                return 1;
+            }
+            if (board[1][intCol].getPlayer() == 2 && board[1][intCol].getType() == Chess.INT_FLAG) {
+                return 2;
+            }
+        }
+
+        // check existence of flag
+        boolean blnExistPlayer1 = false;
+        boolean blnExistPlayer2 = false;
+
+        for (int intRow = 0; intRow < INT_ROWS; intRow++) {
+            for (int intCol = 0; intCol < INT_COLS; intCol++) {
+                if (board[intRow][intCol].getPlayer() == 1 && board[intRow][intCol].getType() == Chess.INT_FLAG) {
+                    blnExistPlayer1 = true;
+                }
+                if (board[intRow][intCol].getPlayer() == 2 && board[intRow][intCol].getType() == Chess.INT_FLAG) {
+                    blnExistPlayer2 = true;
+                }
+            }
+        }
+
+        // check the move
+        if (blnExistPlayer1 && blnExistPlayer2) {
+            return 0;
+        } else if (blnExistPlayer1) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    /**
+     * put a chess at {x, y}
+     *
+     * @param intPlayer player
+     * @param intX      x
+     * @param intY      y
+     * @param intType   type of chess
+     * @return success or not
+     */
+    public boolean put(int intPlayer, int intX, int intY, int intType) {
+        // check the player (1 <= x <= 3 if player is 1, 6 <= x <= 8 if player is 2)
+        if (intPlayer == 1) {
+            if (!inRange(intX, 1, 3)) {
+                return false;
+            }
+        } else {
+            if (!inRange(intX, 6, INT_ROWS)) {
+                return false;
+            }
+        }
+        // if the position is not empty, return false
+        if (board[intX][intY].getType() != Chess.INT_EMPTY_SPACE) {
+            return false;
+        }
+
+        board[intX][intY] = new Chess(intPlayer, intType);
+        return true;
+    }
+
+    /**
+     * check if position {intX, intY} is valid
+     *
+     * @return is or not
      */
     private static boolean valid(int intX, int intY) {
         return 1 <= intX && intX <= INT_ROWS && 1 <= intY && intY <= INT_COLS;
+    }
+
+    /**
+     * Check if it is in a range
+     *
+     * @return is or not
+     */
+    private static boolean inRange(int intV, int intFrom, int intTo) {
+        return intFrom <= intV && intV <= intTo;
     }
 
     public Chess[][] getBoard() {
