@@ -11,22 +11,41 @@ import java.awt.*;
  */
 public class ChatArea extends JPanel {
 
-    String strPrevMsg = "";
+    /**
+     * Scroll pane
+     */
+    JScrollPane scrollPane;
 
-    public void paintComponent(Graphics g){
-        Color myred = new Color(230, 170, 150);
-        g.setColor(myred);
-        g.fillRect(900,0, 380,275);
-    }
+    /**
+     * Text field
+     */
+    JTextArea text;
 
+    /**
+     * Input
+     */
+    JTextField input;
+
+    /**
+     * Create the chat area
+     */
     public ChatArea() {
-        super();
+        super(new BorderLayout());
+        setSize(380, 300);
+        // set text
+        text = new JTextArea();
+        scrollPane = new JScrollPane(scrollPane);
+        // set input
+        input = new JTextField();
+        add(scrollPane, BorderLayout.CENTER);
+        add(input, BorderLayout.SOUTH);
     }
 
-    public void println(String strMsg, TextArea chat, String strUser) {
-        if(!strMsg.equals(strPrevMsg)) {
-            chat.append(strUser + ": " + strMsg + "\n");
-        }
-        strPrevMsg = strMsg;
+    /**
+     * Print a line in chat area
+     */
+    public void println(String strMsg) {
+        text.append(strMsg);
+        text.append("\n");
     }
 }

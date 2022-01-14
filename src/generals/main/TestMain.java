@@ -1,6 +1,7 @@
 package generals.main;
 
 import generals.ui.AnimatePanel;
+import generals.ui.ChatArea;
 
 import javax.swing.*;
 
@@ -13,7 +14,7 @@ public class TestMain {
         JFrame jf = new JFrame();
         jf.setSize(1280, 720);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jf.add(new AnimatePanel());
+        jf.add(new AnimatePanel(){{start();}});
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
     }

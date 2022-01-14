@@ -12,7 +12,12 @@ import java.awt.*;
 public class AnimatePanel extends JPanel {
 
     int intX = 0;
-    int inta = 1200;
+    int intA = 1200;
+
+    int intCnt = 0;
+
+
+    Timer timer;
 
     /**
      * Animate panel
@@ -24,29 +29,32 @@ public class AnimatePanel extends JPanel {
     @Override
     public void paint(Graphics gp) {
         super.paint(gp);
+
         Graphics2D g2d = (Graphics2D) gp;
         g2d.drawString("Welcome to", intX, 50);
-        g2d.drawString("Games of Generals", inta, 100);
+        g2d.drawString("Games of Generals", intA, 100);
         g2d.drawString("Enjoy", intX, 150);
-        try {
-            Thread.sleep(200);
-            intX += 20;
-            inta -= 20;
+        intCnt++;
+        if (intCnt >= 100) {
+            timer.stop();
+            return;
+        }
+        intX += 20;
+        intA -= 20;
 
-            if (intX > getWidth()) {
-                intX = 0;
-            }
-            if (inta < 0) {
-                inta = 1200;
-            }
-            repaint();
-        } catch (InterruptedException ex) {
-            JOptionPane.showMessageDialog(this, ex);
+        if (intX > getWidth()) {
+            intX = 0;
+        }
+        if (intA < 0) {
+            intA = 1200;
         }
     }
 
     public void start() {
-
+        timer = new Timer(50, (e) -> {
+            this.repaint();
+        });
+        timer.start();
     }
 
     @Override
