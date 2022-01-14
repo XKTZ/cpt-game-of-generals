@@ -2,8 +2,11 @@ package generals.main;
 
 import generals.ui.AnimatePanel;
 import generals.ui.ChatArea;
+import generals.ui.ChessContainer;
+import generals.ui.ChessPanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Yidi Chen
@@ -15,9 +18,17 @@ public class TestMain {
         JFrame jf = new JFrame();
         jf.setSize(1280, 720);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        var area = new ChatArea();
-        jf.add(area);
-        jf.setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel(new GridLayout(2, 1));
+
+        ChessContainer container = new ChessContainer();
+
+        panel.add(new ChessPanel(1, 1, container));
+
+        panel.add(new ChessPanel(2, 1, container));
+
+        jf.setContentPane(panel);
+
         jf.setVisible(true);
     }
 }
