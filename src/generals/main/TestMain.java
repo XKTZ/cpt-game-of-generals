@@ -10,11 +10,13 @@ import javax.swing.*;
  * @date 2022-01-10
  */
 public class TestMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         JFrame jf = new JFrame();
         jf.setSize(1280, 720);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jf.add(new AnimatePanel(){{start();}});
+        var area = new ChatArea();
+        jf.add(area);
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
     }

@@ -127,7 +127,8 @@ public class GameBoard {
         }
         // check if there is chess at the position moving to and if there is a chess at position moving from
         if (board[intX][intY].getType() == Chess.INT_EMPTY_SPACE
-                || board[intXTo][intYTo].getType() != Chess.INT_EMPTY_SPACE) {
+                || board[intXTo][intYTo].getType() != Chess.INT_EMPTY_SPACE
+                || board[intX][intY].getPlayer() != intPlayer) {
             return false;
         }
         // move the chess

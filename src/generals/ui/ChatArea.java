@@ -11,6 +11,8 @@ import java.awt.*;
  */
 public class ChatArea extends JPanel {
 
+    private static final Font fnt = new Font("Times New Roman", Font.PLAIN, 12);
+
     /**
      * Scroll pane
      */
@@ -30,15 +32,27 @@ public class ChatArea extends JPanel {
      * Create the chat area
      */
     public ChatArea() {
-        super(new BorderLayout());
+        super(null);
+
         setSize(380, 300);
         // set text
         text = new JTextArea();
-        scrollPane = new JScrollPane(scrollPane);
+        text.setSize(380, 260);
+        text.setLocation(0, 0);
+        text.setLineWrap(true);
+        text.setFont(fnt);
+        scrollPane = new JScrollPane(text);
+        scrollPane.setSize(380, 260);
+        scrollPane.setLocation(0, 0);
+
         // set input
         input = new JTextField();
-        add(scrollPane, BorderLayout.CENTER);
-        add(input, BorderLayout.SOUTH);
+        input.setSize(380, 40);
+        input.setLocation(0, 260);
+        input.setFont(fnt);
+
+        this.add(scrollPane);
+        this.add(input);
     }
 
     /**
