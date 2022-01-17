@@ -158,6 +158,10 @@ public class GameBoard {
      * @return the available position
      */
     public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
+        // if game not started yet, use another available position method
+        if (getPlayerOn() == 0) {
+
+        }
         List<Coordinate> coordinates = new ArrayList<>();
         for (int intCnt = 0, intXNew, intYNew; intCnt < 4; intCnt ++) {
             intXNew = intX + intDx[intCnt];
@@ -167,6 +171,22 @@ public class GameBoard {
             }
         }
         return coordinates.toArray(new Coordinate[]{});
+    }
+
+    /**
+     * Get the available position to move for {x, y} before game start
+     * @param intPlayer player
+     * @param intX x
+     * @param intY y
+     * @return coordinate can move
+     */
+    public Coordinate[] availablePositionBeforeStart(int intPlayer, int intX, int intY) {
+        // player 1: from row 1 to row 3
+        if (intPlayer == 1) {
+
+        }
+        // player 2: from row 6 to row 8
+        return null;
     }
 
     /**
@@ -195,6 +215,10 @@ public class GameBoard {
      * @return the winner
      */
     public int checkWinner() {
+        // if game not started yet, return 0
+        if (intPlayerOn == 0) {
+            return 0;
+        }
         // check if player 1's flag reaches bottom or player 2's flag reaches top
         for (int intCol = 0; intCol < INT_COLS; intCol++) {
             if (board[INT_ROWS][intCol].getPlayer() == 1 && board[INT_ROWS][intCol].getType() == Chess.INT_FLAG) {

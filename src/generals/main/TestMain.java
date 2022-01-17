@@ -7,6 +7,7 @@ import generals.ui.ChessPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author Yidi Chen
@@ -14,21 +15,10 @@ import java.awt.*;
  */
 public class TestMain {
     public static void main(String[] args) throws Exception {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        JFrame jf = new JFrame();
-        jf.setSize(1280, 720);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        String[][] strs = new String[][]{
+                {"aa", "bb", "cc"},
+                {"dd", "ee", "ff"}
+        };
 
-        JPanel panel = new JPanel(new GridLayout(2, 1));
-
-        ChessContainer container = new ChessContainer();
-
-        panel.add(new ChessPanel(1, 1, container));
-
-        panel.add(new ChessPanel(2, 1, container));
-
-        jf.setContentPane(panel);
-
-        jf.setVisible(true);
     }
 }
