@@ -1,7 +1,11 @@
 package generals.backend;
 
+import generals.util.Coordinate;
+
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The game board
@@ -12,6 +16,15 @@ import java.util.Arrays;
 public class GameBoard {
 
     public static final int INT_ROWS = 8, INT_COLS = 9;
+
+    /**
+     * Displacement x
+     */
+    private static final int[] intDx = new int[]{1, 0, -1, 0};
+    /**
+     * Displacement y
+     */
+    private static final int[] intDy = new int[]{0, 1, 0, -1};
 
     /**
      * Game board
@@ -135,6 +148,25 @@ public class GameBoard {
         board[intXTo][intYTo] = board[intX][intY];
         board[intX][intY] = Chess.EMPTY;
         return true;
+    }
+
+    /**
+     * Get the available position to move for {x, y}
+     * @param intPlayer player
+     * @param intX x
+     * @param intY y
+     * @return the available position
+     */
+    public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
+        List<Coordinate> coordinates = new ArrayList<>();
+        for (int intCnt = 0, intXNew, intYNew; intCnt < 4; intCnt ++) {
+            intXNew = intX + intDx[intCnt];
+            intYNew = intY + intDy[intCnt];
+            if (valid(intXNew, intYNew) && board[intXNew][intYNew].getPlayer() != intPlayer ) {
+                coordinates.add(new Coordinate(intXNew, intYNew));
+            }
+        }
+        return coordinates.toArray(new Coordinate[]{});
     }
 
     /**
