@@ -160,7 +160,7 @@ public class GameBoard {
     public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
         // if game not started yet, use another available position method
         if (getPlayerOn() == 0) {
-
+            return availablePositionBeforeStart(intPlayer, intX, intY);
         }
         List<Coordinate> coordinates = new ArrayList<>();
         for (int intCnt = 0, intXNew, intYNew; intCnt < 4; intCnt ++) {

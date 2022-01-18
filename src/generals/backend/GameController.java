@@ -1,6 +1,7 @@
 package generals.backend;
 
 import generals.network.XSocket;
+import generals.util.Coordinate;
 
 import static generals.util.Util.*;
 
@@ -196,6 +197,16 @@ public class GameController {
         // send that the game has updated
         socket.request(XSocket.STR_RECEIVER_ALL, messageOf(STR_BOARD_UPDATE), (ignored) -> {
         });
+    }
+
+    /**
+     * Get available positions for {x, y} to move
+     * @param intX x
+     * @param intY y
+     * @return coordinates available
+     */
+    public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
+        return board.availablePosition(intPlayer, intX, intY);
     }
 
     /**

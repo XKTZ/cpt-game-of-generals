@@ -1,5 +1,7 @@
 package generals.frontend.ui;
 
+import generals.util.Coordinate;
+
 /**
  * @author Yidi Chen
  * @date 2022-01-14
@@ -12,6 +14,22 @@ public class ChessContainer {
 
     public ChessContainer() {
 
+    }
+
+    public int getXFrom() {
+        return intXFrom;
+    }
+
+    public int getYFrom() {
+        return intYFrom;
+    }
+
+    public int getXTo() {
+        return intXTo;
+    }
+
+    public int getYTo() {
+        return intYTo;
     }
 
     /**
