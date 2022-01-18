@@ -1,6 +1,7 @@
 package generals.backend;
 
 import static generals.util.Util.*;
+import static generals.network.Messages.*;
 
 import generals.network.XSocket;
 
@@ -11,11 +12,6 @@ import generals.network.XSocket;
  * @date 2022-01-17
  */
 public class MessageController {
-
-    /**
-     * String identifying sending message
-     */
-    private static final String STR_MESSAGE = "message";
 
     /**
      * socket
@@ -34,9 +30,9 @@ public class MessageController {
     /**
      * Send message
      */
-    public void sendMessage(String msg) {
+    public void sendMessage(String strMsg) {
         socket.request(XSocket.STR_RECEIVER_ALL,
-                messageOf(STR_MESSAGE, msg),
+                messageOf(STR_MESSAGE, strMsg),
                 (ignored) -> {
                 });
     }

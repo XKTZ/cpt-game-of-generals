@@ -1,12 +1,11 @@
 package generals.frontend.ui;
 
-import generals.backend.Chess;
-
 import javax.swing.*;
 import java.awt.*;
 
 import generals.backend.GameBoard;
 import generals.frontend.FrontendService;
+import generals.frontend.GameBoardService;
 
 /**
  * @author Yidi Chen
@@ -16,26 +15,35 @@ public class ChessBoard extends JPanel {
 
     private ChessPanel[][] panel = new ChessPanel[GameBoard.INT_ROWS + 1][GameBoard.INT_COLS + 1];
 
-    private ChessContainer container = new ChessContainer();
+    private ChessContainer container;
 
-    private FrontendService service;
+    private FrontendService frontendService;
 
-    public ChessBoard(int intPlayer) {
+    private GameBoardService gameBoardService;
+
+    public ChessBoard(int intPlayer,
+                      ChessContainer container, FrontendService frontendService, GameBoardService gameBoardService) {
         super(new GridLayout(GameBoard.INT_ROWS, GameBoard.INT_COLS));
-
-        service = new FrontendService(intPlayer, this);
 
         setSize(900, 720);
 
-        for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow ++) {
-            for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol ++) {
-                panel[intRow][intCol] = new ChessPanel(intRow, intCol, container, service);
+        this.container = container;
+        this.frontendService = frontendService;
+        this.gameBoardService = gameBoardService;
+
+        for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow++) {
+            for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol++) {
+                panel[intRow][intCol] = new ChessPanel(intRow, intCol, container, frontendService, gameBoardService);
                 add(panel[intRow][intCol], GameBoard.INT_ROWS - intRow, intCol - 1);
             }
         }
     }
 
-    public ChessPanel[][] getPanel() {
+    public ChessPanel[][] getPanels() {
         return panel;
+    }
+
+    public ChessContainer getContainer() {
+        return container;
     }
 }

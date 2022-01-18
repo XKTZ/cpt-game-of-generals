@@ -1,6 +1,10 @@
 package generals.main;
 
+import generals.frontend.FrontendService;
+import generals.frontend.GameBoardService;
 import generals.frontend.ui.ChessBoard;
+import generals.frontend.ui.ChessContainer;
+import generals.frontend.ui.NotPutChessPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +21,26 @@ public class TestMain {
 
         frame.setLayout(null);
 
-        frame.add(new ChessBoard(1) {{
-            setLocation(0, 0);
-        }});
+        ChessContainer container = new ChessContainer();
+        FrontendService frontendService = new FrontendService(1);
+        GameBoardService gameBoardService = new GameBoardService(null);
+
+        var chessBoard = new ChessBoard(1, container, frontendService, gameBoardService) {
+            {
+                setLocation(0, 0);
+            }
+
+        };
+
+        frontendService.setBoard(chessBoard);
+
+        frame.add(chessBoard);
+
+        NotPutChessPanel notPutChessPanel = new NotPutChessPanel(5,
+                chessBoard.getContainer(), frontendService, gameBoardService);
+        notPutChessPanel.setLocation(900, 100);
+        frame.add(notPutChessPanel);
+
         frame.pack();
         frame.setVisible(true);
     }

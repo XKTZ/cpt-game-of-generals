@@ -1,6 +1,7 @@
 package generals.frontend.ui;
 
 import generals.frontend.FrontendService;
+import generals.frontend.GameBoardService;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -18,20 +19,25 @@ public class ChessPanel extends JPanel implements MouseListener {
 
     private static final LineBorder BORDER_HIGH_LIGHT = new LineBorder(Color.YELLOW, 2);
 
-    private int intX, intY;
+    protected int intX, intY;
 
-    private ChessContainer container;
+    protected int intType;
 
-    private FrontendService frontendService;
+    protected ChessContainer container;
 
+    protected FrontendService frontendService;
 
-    public ChessPanel(int intX, int intY, ChessContainer container, FrontendService service) {
+    protected GameBoardService gameBoardService;
+
+    public ChessPanel(int intX, int intY, ChessContainer container, FrontendService service, GameBoardService gameBoardService) {
         super();
 
         this.intX = intX;
         this.intY = intY;
+        this.intType = 0;
         this.container = container;
         this.frontendService = service;
+        this.gameBoardService = gameBoardService;
 
         addMouseListener(this);
 
@@ -50,6 +56,21 @@ public class ChessPanel extends JPanel implements MouseListener {
      */
     public void lowlight() {
         setBorder(BORDER_LOW_LIGHT);
+    }
+
+    public void setType(int intType) {
+        this.intType = intType;
+        this.repaint();
+    }
+
+    public int getType() {
+        return intType;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawString(String.valueOf(intType), 0, 0);
     }
 
     @Override

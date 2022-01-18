@@ -152,21 +152,22 @@ public class GameBoard {
 
     /**
      * Get the available position to move for {x, y}
+     *
      * @param intPlayer player
-     * @param intX x
-     * @param intY y
+     * @param intX      x
+     * @param intY      y
      * @return the available position
      */
     public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
         // if game not started yet, use another available position method
         if (getPlayerOn() == 0) {
-            return availablePositionBeforeStart(intPlayer, intX, intY);
+            return availablePositionBeforeStart(intPlayer);
         }
         List<Coordinate> coordinates = new ArrayList<>();
-        for (int intCnt = 0, intXNew, intYNew; intCnt < 4; intCnt ++) {
+        for (int intCnt = 0, intXNew, intYNew; intCnt < 4; intCnt++) {
             intXNew = intX + intDx[intCnt];
             intYNew = intY + intDy[intCnt];
-            if (valid(intXNew, intYNew) && board[intXNew][intYNew].getPlayer() != intPlayer ) {
+            if (valid(intXNew, intYNew) && board[intXNew][intYNew].getPlayer() != intPlayer) {
                 coordinates.add(new Coordinate(intXNew, intYNew));
             }
         }
@@ -175,18 +176,35 @@ public class GameBoard {
 
     /**
      * Get the available position to move for {x, y} before game start
+     *
      * @param intPlayer player
-     * @param intX x
-     * @param intY y
+     * @param intX      x
+     * @param intY      y
      * @return coordinate can move
      */
-    public Coordinate[] availablePositionBeforeStart(int intPlayer, int intX, int intY) {
+    public Coordinate[] availablePositionBeforeStart(int intPlayer) {
+        List<Coordinate> ret = new ArrayList<>();
         // player 1: from row 1 to row 3
         if (intPlayer == 1) {
-
+            for (int intRow = 1; intRow <= 3; intRow ++) {
+                for (int intCol = 1; intCol <= INT_COLS; intCol ++) {
+                    if (board[intRow][intCol].isEmpty()) {
+                        ret.add(Coordinate.of(intRow, intCol));
+                    }
+                }
+            }
         }
         // player 2: from row 6 to row 8
-        return null;
+        else {
+            for (int intRow = 6; intRow <= INT_ROWS; intRow ++) {
+                for (int intCol = 1; intCol <= INT_COLS; intCol ++) {
+                    if (board[intRow][intCol].isEmpty()) {
+                        ret.add(Coordinate.of(intRow, intCol));
+                    }
+                }
+            }
+        }
+        return ret.toArray(Coordinate[]::new);
     }
 
     /**

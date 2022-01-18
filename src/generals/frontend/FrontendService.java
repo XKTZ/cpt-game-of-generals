@@ -8,8 +8,6 @@ import generals.util.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static generals.util.Util.*;
-
 /**
  * @author Yidi Chen
  * @date 2022-01-18
@@ -22,7 +20,15 @@ public class FrontendService {
 
     private XSocket socket;
 
-    public FrontendService(int intPlayer, ChessBoard board) {
+    public FrontendService(int intPlayer) {
+    }
+
+    /**
+     * Set the board
+     *
+     * @param board the board
+     */
+    public void setBoard(ChessBoard board) {
         this.board = board;
     }
 
@@ -39,22 +45,32 @@ public class FrontendService {
                     // ...
                 });
          */
-        int[] dx = new int[]{1, 0, -1, 0};
-        int[] dy = new int[]{0, 1, 0, -1};
 
         List<Coordinate> listCoordinate = new ArrayList<>();
 
-        for (int i = 0; i < 4; i++) {
-            if (intX + dx[i] >= 1 && intX + dx[i] <= 8 && intY + dy[i] >= 1 && intY + dy[i] <= 9) {
-                listCoordinate.add(Coordinate.of(intX + dx[i], intY + dy[i]));
+        if (intX == 0 && intY == 0) {
+            for (int i = 1; i <= 3; i++) {
+                for (int j = 1; j <= 9; j++) {
+                    if (board.getPanels()[i][j].getType() == 0) {
+                        listCoordinate.add(Coordinate.of(i, j));
+                    }
+                }
+            }
+        } else {
+            int[] dx = new int[]{1, 0, -1, 0};
+            int[] dy = new int[]{0, 1, 0, -1};
+
+            for (int i = 0; i < 4; i++) {
+                if (intX + dx[i] >= 1 && intX + dx[i] <= 8 && intY + dy[i] >= 1 && intY + dy[i] <= 9) {
+                    listCoordinate.add(Coordinate.of(intX + dx[i], intY + dy[i]));
+                }
             }
         }
-
-        highlightAll(listCoordinate.toArray(new Coordinate[0]));
+        highlightCoordinates(listCoordinate.toArray(new Coordinate[0]));
     }
 
     public void lowlightAll() {
-        for (ChessPanel[] coordinateArrays : board.getPanel()) {
+        for (ChessPanel[] coordinateArrays : board.getPanels()) {
             for (ChessPanel panel : coordinateArrays) {
                 if (panel != null) {
                     panel.lowlight();
@@ -63,9 +79,9 @@ public class FrontendService {
         }
     }
 
-    private void highlightAll(Coordinate[] coordinates) {
+    private void highlightCoordinates(Coordinate[] coordinates) {
         for (Coordinate coordinate : coordinates) {
-            board.getPanel()[coordinate.intX][coordinate.intY].highlight();
+            board.getPanels()[coordinate.intX][coordinate.intY].highlight();
         }
     }
 }

@@ -3,6 +3,8 @@ package generals.backend;
 import generals.network.XSocket;
 import generals.util.Coordinate;
 
+import java.util.Arrays;
+
 import static generals.util.Util.*;
 
 /**
@@ -116,7 +118,10 @@ public class GameController {
      * @return success
      */
     public boolean move(int intPlayer, int intX, int intY, int intXTo, int intYTo) {
-        intX = getX(intPlayer, intX);
+        Coordinate coor = getCoordinate(intPlayer, intX, intY);
+        intX = coor.intX;
+        intY = coor.intY;
+
         boolean blnRes = board.move(intPlayer, intX, intY, intXTo, intYTo);
 
         int intWinner;
@@ -143,7 +148,10 @@ public class GameController {
      * @return success
      */
     public boolean put(int intPlayer, int intX, int intY, int intType) {
-        intX = getX(intPlayer, intX);
+        Coordinate coor = getCoordinate(intPlayer, intX, intY);
+        intX = coor.intX;
+        intY = coor.intY;
+
         boolean blnRes = board.put(intPlayer, intX, intY, intType);
         if (blnRes) {
             boardUpdated();
@@ -175,16 +183,18 @@ public class GameController {
      * @return the board
      */
     public Chess[][] getBoard(int intPlayer) {
-        Chess[][] ret = new Chess[GameBoard.INT_ROWS + 1][];
+        Chess[][] ret;
         if (intPlayer == 1) {
             // for player 1, just copy
             ret = board.getBoard();
         } else {
-            int intOn = GameBoard.INT_ROWS;
             // for player 2, you have to reverse the board
-            for (var row : board.getBoard()) {
-                ret[intOn] = row;
-                intOn--;
+            ret = new Chess[GameBoard.INT_ROWS + 1][GameBoard.INT_COLS + 1];
+            Chess[][] boardArray = board.getBoard();
+            for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow++) {
+                for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol++) {
+                    ret[intRow][intCol] = boardArray[GameBoard.INT_ROWS - intRow + 1][GameBoard.INT_COLS - intCol + 1];
+                }
             }
         }
         return ret;
@@ -201,27 +211,34 @@ public class GameController {
 
     /**
      * Get available positions for {x, y} to move
+     *
      * @param intX x
      * @param intY y
      * @return coordinates available
      */
     public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
-        return board.availablePosition(intPlayer, intX, intY);
+        Coordinate coor = getCoordinate(intPlayer, intX, intY);
+        intX = coor.intX;
+        intY = coor.intY;
+        return Arrays.stream(board.availablePosition(intPlayer, intX, intY))
+                .map(coordinate -> getCoordinate(intPlayer, coordinate.intX, coordinate.intY))
+                .toArray(Coordinate[]::new);
     }
 
     /**
-     * Get the x-axis
+     * Get the coordinate
      *
      * @param intPlayer player
      * @param intX      x
-     * @return x
+     * @param intY      y
+     * @return coordinate new
      */
-    private static int getX(int intPlayer, int intX) {
+    private static Coordinate getCoordinate(int intPlayer, int intX, int intY) {
         if (intPlayer == 1) {
-            return intX;
+            return Coordinate.of(intX, intY);
         } else {
             // for player 2, the board should be reversed
-            return GameBoard.INT_ROWS + 1 - intX;
+            return Coordinate.of(GameBoard.INT_ROWS + 1 - intX, GameBoard.INT_COLS + 1 - intY);
         }
     }
 }
