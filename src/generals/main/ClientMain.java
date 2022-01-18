@@ -1,16 +1,9 @@
 package generals.main;
 
 import generals.network.XSocket;
-import generals.ui.MainFrame;
-import util.SuperSocketMaster;
+import generals.frontend.ui.MainFrame;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
 
 /**
  * Main class for client

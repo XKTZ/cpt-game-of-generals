@@ -1,6 +1,4 @@
-package generals.ui;
-
-import org.w3c.dom.css.RGBColor;
+package generals.frontend.ui;
 
 import javax.swing.*;
 import java.awt.*;

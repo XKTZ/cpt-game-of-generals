@@ -1,4 +1,4 @@
-package generals.ui;
+package generals.frontend.ui;
 
 import javax.swing.*;
 import java.awt.*;
