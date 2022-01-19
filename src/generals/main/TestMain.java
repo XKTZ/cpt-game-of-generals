@@ -1,8 +1,10 @@
 package generals.main;
 
 import generals.frontend.GameService;
+import generals.frontend.HelpChessContainer;
 import generals.frontend.ui.ChessBoardPanel;
 import generals.frontend.ChessContainer;
+import generals.frontend.ui.HelpChessPanel;
 import generals.frontend.ui.NotPutChessPanel;
 
 import javax.swing.*;
@@ -18,25 +20,20 @@ public class TestMain {
         frame.setPreferredSize(new Dimension(1280, 720));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        frame.setLayout(null);
+        frame.setLayout(new GridLayout(1, 2));
 
-        ChessContainer container = new ChessContainer();
-        GameService gameService = new GameService(null);
+        HelpChessContainer container = new HelpChessContainer();
 
-        var chessBoard = new ChessBoardPanel(1, container, gameService) {
-            {
-                setLocation(0, 0);
-            }
-        };
+        HelpChessPanel chessPanel1 = new HelpChessPanel(container);
 
-        frame.add(chessBoard);
+        HelpChessPanel chessPanel2 = new HelpChessPanel(container, chessPanel1);
 
-        NotPutChessPanel notPutChessPanel = new NotPutChessPanel(5,
-                chessBoard, gameService);
-        notPutChessPanel.setLocation(900, 100);
-        frame.add(notPutChessPanel);
+        chessPanel1.setNext(chessPanel2);
 
-        notPutChessPanel.repaint();
+        chessPanel1.setChessOn(true);
+
+        frame.add(chessPanel1);
+        frame.add(chessPanel2);
 
         frame.pack();
         frame.setVisible(true);
