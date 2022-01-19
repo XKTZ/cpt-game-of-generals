@@ -19,10 +19,10 @@ public class NotPutChessPanel extends ChessPanel {
      * Create not putten chess panel by provide type
      *
      * @param intType   type
-     * @param chessBoard chess board
+     * @param chessBoardPanel chess board
      */
-    public NotPutChessPanel(int intType, ChessBoard chessBoard, GameService gameService) {
-        super(0, 0, chessBoard, gameService);
+    public NotPutChessPanel(int intType, ChessBoardPanel chessBoardPanel, GameService gameService) {
+        super(0, 0, chessBoardPanel, gameService);
         setSize(100, 90);
         this.intType = intType;
     }
@@ -30,9 +30,9 @@ public class NotPutChessPanel extends ChessPanel {
     @Override
     public void mouseReleased(MouseEvent e) {
         // low light
-        chessBoard.lowlightAll();
+        chessBoardPanel.lowlightAll();
         // remove this
-        boolean blnSuc = gameService.put(chessBoard.getContainer().getXTo(), chessBoard.getContainer().getYTo(), intType);
+        boolean blnSuc = gameService.put(chessBoardPanel.getContainer().getXTo(), chessBoardPanel.getContainer().getYTo(), intType);
         var parent = this.getParent();
         parent.remove(this);
         parent.repaint();

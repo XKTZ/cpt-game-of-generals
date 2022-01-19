@@ -1,6 +1,5 @@
 package generals.backend;
 
-import static generals.util.Util.*;
 import static generals.network.Messages.*;
 
 import generals.network.XSocket;
@@ -20,10 +19,11 @@ public class MessageController {
 
     /**
      * Create the message controller by giving socket
-     *
-     * @param socket socket
      */
-    public MessageController(XSocket socket) {
+    public MessageController() {
+    }
+
+    public void setSocket(XSocket socket) {
         this.socket = socket;
     }
 
@@ -31,9 +31,6 @@ public class MessageController {
      * Send message
      */
     public void sendMessage(String strMsg) {
-        socket.request(XSocket.STR_RECEIVER_ALL,
-                messageOf(STR_MESSAGE, strMsg),
-                (ignored) -> {
-                });
+        socket.request(messageOf(STR_MESSAGE, strMsg));
     }
 }

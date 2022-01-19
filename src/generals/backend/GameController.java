@@ -5,7 +5,7 @@ import generals.util.Coordinate;
 
 import java.util.Arrays;
 
-import static generals.util.Util.*;
+import static generals.network.Messages.*;
 
 /**
  * The controller layer
@@ -60,10 +60,14 @@ public class GameController {
      */
     private String[] strPlayerName = new String[3];
 
-    public GameController(XSocket socket, MessageController messageController) {
-        this.socket = socket;
+    public GameController(MessageController messageController) {
         this.messageController = messageController;
         intPlayerCount = 0;
+        reset();
+    }
+
+    public void setSocket(XSocket socket) {
+        this.socket = socket;
     }
 
     /**
@@ -95,8 +99,7 @@ public class GameController {
             board.switchTurn();
             intReadyCount = 0;
             // start the game
-            socket.request(XSocket.STR_RECEIVER_ALL, messageOf(STR_GAME_START), (ignored) -> {
-            });
+            socket.request(messageOf(STR_GAME_START));
         }
     }
 
@@ -142,12 +145,12 @@ public class GameController {
      * {player} put {type} at {x, y}
      *
      * @param intPlayer player
+     * @param intType   type
      * @param intX      x
      * @param intY      y
-     * @param intType   type
      * @return success
      */
-    public boolean put(int intPlayer, int intX, int intY, int intType) {
+    public boolean put(int intPlayer, int intType, int intX, int intY) {
         Coordinate coor = getCoordinate(intPlayer, intX, intY);
         intX = coor.intX;
         intY = coor.intY;
@@ -205,8 +208,7 @@ public class GameController {
      */
     public void boardUpdated() {
         // send that the game has updated
-        socket.request(XSocket.STR_RECEIVER_ALL, messageOf(STR_BOARD_UPDATE), (ignored) -> {
-        });
+        socket.request(messageOf(STR_BOARD_UPDATE));
     }
 
     /**

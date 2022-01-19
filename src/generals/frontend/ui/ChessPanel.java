@@ -22,11 +22,11 @@ public class ChessPanel extends JPanel implements MouseListener {
 
     protected int intType;
 
-    protected ChessBoard chessBoard;
+    protected ChessBoardPanel chessBoardPanel;
 
     protected GameService gameService;
 
-    public ChessPanel(int intX, int intY, ChessBoard board, GameService gameService) {
+    public ChessPanel(int intX, int intY, ChessBoardPanel board, GameService gameService) {
         super();
 
         this.intX = intX;
@@ -34,7 +34,7 @@ public class ChessPanel extends JPanel implements MouseListener {
         this.intType = 0;
 
         // set container, chess board, and game service
-        this.chessBoard = board;
+        this.chessBoardPanel = board;
         this.gameService = gameService;
 
         addMouseListener(this);
@@ -68,6 +68,7 @@ public class ChessPanel extends JPanel implements MouseListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setColor(Color.BLACK);
         g.drawString(String.valueOf(intType), 0, 0);
     }
 
@@ -77,18 +78,18 @@ public class ChessPanel extends JPanel implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        chessBoard.highlightAvailable(intX, intY);
-        chessBoard.getContainer().setFrom(intX, intY);
+        chessBoardPanel.highlightAvailable(intX, intY);
+        chessBoardPanel.getContainer().setFrom(intX, intY);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        chessBoard.lowlightAll();
+        chessBoardPanel.lowlightAll();
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        chessBoard.getContainer().setTo(intX, intY);
+        chessBoardPanel.getContainer().setTo(intX, intY);
     }
 
     @Override

@@ -12,7 +12,6 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static generals.util.Util.*;
 import static generals.network.Messages.*;
 
 /**
@@ -21,25 +20,24 @@ import static generals.network.Messages.*;
  * @author Yidi Chen
  * @date 2021-12-28
  */
-public class ServerMain {
+public class ServerMain implements Runnable {
 
     private static final int INT_PORT = 8888;
 
-    XSocket sock;
+    private XSocket sock;
+
+    /**
+     * Message controller
+     */
+    MessageController messageController = new MessageController();
+
+    /**
+     * Game controller
+     */
+    GameController gameController = new GameController(messageController);
 
     public ServerMain() {
         sock = new XSocket(INT_PORT, new RequestHandler() {
-
-            /**
-             * Message controller
-             */
-            MessageController messageController = new MessageController(sock);
-
-            /**
-             * Game controller
-             */
-            GameController gameController = new GameController(sock, messageController);
-
             @Override
             public void response(String[] strData, Consumer<String[]> responder) {
                 // connect
@@ -95,10 +93,10 @@ public class ServerMain {
                     Chess[][] boardArray = gameController.getBoard(Integer.parseInt(strData[1]));
                     String[] strResp = new String[GameBoard.INT_ROWS * GameBoard.INT_COLS];
                     int intCnt = 0;
-                    for (int intRow = 0; intRow < GameBoard.INT_ROWS; intRow ++) {
-                        for (int intCol = 0; intCol < GameBoard.INT_COLS; intCol ++) {
-                            strResp[intCol] = boardArray[intRow][intCnt].toString();
-                            intCnt ++;
+                    for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow++) {
+                        for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol++) {
+                            strResp[intCnt] = boardArray[intRow][intCol].toString();
+                            intCnt++;
                         }
                     }
                     responder.accept(strResp);
@@ -116,7 +114,7 @@ public class ServerMain {
             }
 
             private void put(int intPlayer, int intChessId, int intX, int intY) {
-                gameController.put(intPlayer, intX, intY, intChessId);
+                gameController.put(intPlayer, intChessId, intX, intY);
             }
 
             private void ready() {
@@ -131,9 +129,18 @@ public class ServerMain {
                 return gameController.move(intPlayer, intX, intY, intXTo, intYTo);
             }
         });
+
+        // set the socket in controller after created socket
+        messageController.setSocket(sock);
+        gameController.setSocket(sock);
+    }
+
+    @Override
+    public void run() {
+        sock.connect();
     }
 
     public static void main(String[] args) {
-
+        new ServerMain().run();
     }
 }

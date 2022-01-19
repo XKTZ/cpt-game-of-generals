@@ -196,6 +196,23 @@ public class XSocket implements AutoCloseable {
     }
 
     /**
+     * Method for only requesting, not response
+     * @param strMsgs strMessage
+     */
+    public synchronized void request(String[] strMsgs) {
+        if (isServer()) {
+            ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
+                    STR_TYPE_REQUEST, intIdOn.get(), strName, STR_RECEIVER_ALL,
+                    String.join(STR_MESSAGE_SPLITTER, strMsgs)));
+        } else {
+            ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
+                    STR_TYPE_REQUEST, intIdOn.get(), strName, STR_SERVER_NAME,
+                    String.join(STR_MESSAGE_SPLITTER, strMsgs)));
+        }
+        intIdOn.incrementAndGet();
+    }
+
+    /**
      * Method for requesting to the server
      *
      * @param strMsgs the message needs to send

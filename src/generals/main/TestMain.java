@@ -1,7 +1,7 @@
 package generals.main;
 
 import generals.frontend.GameService;
-import generals.frontend.ui.ChessBoard;
+import generals.frontend.ui.ChessBoardPanel;
 import generals.frontend.ui.ChessContainer;
 import generals.frontend.ui.NotPutChessPanel;
 
@@ -23,11 +23,10 @@ public class TestMain {
         ChessContainer container = new ChessContainer();
         GameService gameService = new GameService(null);
 
-        var chessBoard = new ChessBoard(1, container, gameService) {
+        var chessBoard = new ChessBoardPanel(1, container, gameService) {
             {
                 setLocation(0, 0);
             }
-
         };
 
         frame.add(chessBoard);
@@ -36,6 +35,8 @@ public class TestMain {
                 chessBoard, gameService);
         notPutChessPanel.setLocation(900, 100);
         frame.add(notPutChessPanel);
+
+        notPutChessPanel.repaint();
 
         frame.pack();
         frame.setVisible(true);
