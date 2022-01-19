@@ -6,7 +6,7 @@ import generals.network.XSocket;
  * @author Yidi Chen
  * @date 2022-01-18
  */
-public class GameBoardService {
+public class GameService {
 
     private XSocket socket;
 
@@ -17,7 +17,7 @@ public class GameBoardService {
      *
      * @param socket socket
      */
-    public GameBoardService(XSocket socket) {
+    public GameService(XSocket socket) {
         this.socket = socket;
     }
 
@@ -27,7 +27,8 @@ public class GameBoardService {
      * @param intY y
      * @param intType type
      */
-    public void put(int intX, int intY, int intType) {
+    public boolean put(int intX, int intY, int intType) {
         System.out.println("Putting at " + intX + " , " + intY);
+        return true;
     }
 }

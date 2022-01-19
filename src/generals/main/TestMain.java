@@ -1,7 +1,6 @@
 package generals.main;
 
-import generals.frontend.FrontendService;
-import generals.frontend.GameBoardService;
+import generals.frontend.GameService;
 import generals.frontend.ui.ChessBoard;
 import generals.frontend.ui.ChessContainer;
 import generals.frontend.ui.NotPutChessPanel;
@@ -22,22 +21,19 @@ public class TestMain {
         frame.setLayout(null);
 
         ChessContainer container = new ChessContainer();
-        FrontendService frontendService = new FrontendService(1);
-        GameBoardService gameBoardService = new GameBoardService(null);
+        GameService gameService = new GameService(null);
 
-        var chessBoard = new ChessBoard(1, container, frontendService, gameBoardService) {
+        var chessBoard = new ChessBoard(1, container, gameService) {
             {
                 setLocation(0, 0);
             }
 
         };
 
-        frontendService.setBoard(chessBoard);
-
         frame.add(chessBoard);
 
         NotPutChessPanel notPutChessPanel = new NotPutChessPanel(5,
-                chessBoard.getContainer(), frontendService, gameBoardService);
+                chessBoard, gameService);
         notPutChessPanel.setLocation(900, 100);
         frame.add(notPutChessPanel);
 

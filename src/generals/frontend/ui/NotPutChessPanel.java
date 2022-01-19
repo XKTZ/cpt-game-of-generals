@@ -1,7 +1,6 @@
 package generals.frontend.ui;
 
-import generals.frontend.FrontendService;
-import generals.frontend.GameBoardService;
+import generals.frontend.GameService;
 
 import java.awt.event.MouseEvent;
 
@@ -20,24 +19,20 @@ public class NotPutChessPanel extends ChessPanel {
      * Create not putten chess panel by provide type
      *
      * @param intType   type
-     * @param container container
-     * @param frontendService   frontendService
+     * @param chessBoard chess board
      */
-    public NotPutChessPanel(int intType, ChessContainer container, FrontendService frontendService, GameBoardService gameBoardService) {
-        super(0, 0, container, frontendService, gameBoardService);
+    public NotPutChessPanel(int intType, ChessBoard chessBoard, GameService gameService) {
+        super(0, 0, chessBoard, gameService);
         setSize(100, 90);
         this.intType = intType;
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-        frontendService.highlightAvailable(intX, intY);
-    }
-
-    @Override
     public void mouseReleased(MouseEvent e) {
-        frontendService.lowlightAll();
-        gameBoardService.put(container.getXTo(), container.getYTo(), intType);
+        // low light
+        chessBoard.lowlightAll();
+        // remove this
+        boolean blnSuc = gameService.put(chessBoard.getContainer().getXTo(), chessBoard.getContainer().getYTo(), intType);
         var parent = this.getParent();
         parent.remove(this);
         parent.repaint();

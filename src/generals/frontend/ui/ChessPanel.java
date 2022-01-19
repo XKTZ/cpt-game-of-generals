@@ -1,7 +1,6 @@
 package generals.frontend.ui;
 
-import generals.frontend.FrontendService;
-import generals.frontend.GameBoardService;
+import generals.frontend.GameService;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -23,21 +22,20 @@ public class ChessPanel extends JPanel implements MouseListener {
 
     protected int intType;
 
-    protected ChessContainer container;
+    protected ChessBoard chessBoard;
 
-    protected FrontendService frontendService;
+    protected GameService gameService;
 
-    protected GameBoardService gameBoardService;
-
-    public ChessPanel(int intX, int intY, ChessContainer container, FrontendService service, GameBoardService gameBoardService) {
+    public ChessPanel(int intX, int intY, ChessBoard board, GameService gameService) {
         super();
 
         this.intX = intX;
         this.intY = intY;
         this.intType = 0;
-        this.container = container;
-        this.frontendService = service;
-        this.gameBoardService = gameBoardService;
+
+        // set container, chess board, and game service
+        this.chessBoard = board;
+        this.gameService = gameService;
 
         addMouseListener(this);
 
@@ -79,18 +77,18 @@ public class ChessPanel extends JPanel implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        frontendService.highlightAvailable(intX, intY);
-        container.setFrom(intX, intY);
+        chessBoard.highlightAvailable(intX, intY);
+        chessBoard.getContainer().setFrom(intX, intY);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        frontendService.lowlightAll();
+        chessBoard.lowlightAll();
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        container.setTo(intX, intY);
+        chessBoard.getContainer().setTo(intX, intY);
     }
 
     @Override
