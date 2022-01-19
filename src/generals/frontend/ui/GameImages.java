@@ -1,34 +1,22 @@
 package generals.frontend.ui;
 
-import javax.swing.*;
 import javax.imageio.ImageIO;
-import java.awt.image.*;
-import java.io.*;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-public class GameImages extends JPanel {
-    BufferedImage imgSpy;
-    BufferedImage imgSergeant;
-    BufferedImage imgPrivate;
-    BufferedImage imgFlag;
-    BufferedImage img5Star;
-    BufferedImage img4Star;
-    BufferedImage img3Star;
-    BufferedImage img2Star;
-    BufferedImage img1Star;
-    BufferedImage img3Sun;
-    BufferedImage img2Sun;
-    BufferedImage img1Sun;
-    BufferedImage img3Triangle;
-    BufferedImage img2Triangle;
-    BufferedImage img1Triangle;
+public interface GameImages {
 
+    BufferedImage IMAGE_FLAG = imageOf("res/img/flag.png");
 
-    public GameImages() {
-        super();
-        try{
-            img1Sun = ImageIO.read(new File("1-sun-colonel.png"));
-        }catch(IOException e){
-            System.out.println("ERROR");
+    static BufferedImage imageOf(String path) {
+        try {
+            BufferedImage image = ImageIO.read(GameImages.class.getResourceAsStream(path));
+            return image;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

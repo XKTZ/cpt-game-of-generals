@@ -8,6 +8,10 @@ import java.util.Arrays;
  */
 public interface Messages {
 
+    int INT_FAILED = 0;
+
+    int INT_SUCCESS = 1;
+
     String STR_CONNECT = "connect";
 
     String STR_PUT = "put";
