@@ -9,12 +9,9 @@ import javax.swing.*;
 public class HelpPanel extends JPanel {
 
     public HelpPanel() {
-        JFrame frame = new JFrame("HelpPanel");
-        frame.setVisible(true);
-        frame.setSize(900,720);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super(null);
+        setSize(900,720);
 
-        JLabel label = new Jlabel("Try to move the piece by dragging");
-        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Try to move the piece by dragging");
     }
 }
