@@ -14,7 +14,7 @@ public class HelpPanel extends JPanel {
         frame.setSize(900,720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel label = new Jlabel("Try to move the piece by dragging");
+        JLabel label = new JLabel("Try to move the piece by dragging");
         JPanel panel = new JPanel();
     }
 }
