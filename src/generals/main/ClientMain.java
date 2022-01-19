@@ -3,7 +3,7 @@ package generals.main;
 import generals.backend.GameBoard;
 import generals.frontend.GameService;
 import generals.frontend.ui.ChessBoardPanel;
-import generals.frontend.ui.ChessContainer;
+import generals.frontend.ChessContainer;
 import generals.frontend.ui.NotPutChessPanel;
 import generals.network.XSocket;
 

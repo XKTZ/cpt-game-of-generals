@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import generals.backend.GameBoard;
+import generals.frontend.ChessContainer;
 import generals.frontend.GameService;
 import generals.util.Coordinate;
 

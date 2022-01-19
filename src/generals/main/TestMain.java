@@ -2,7 +2,7 @@ package generals.main;
 
 import generals.frontend.GameService;
 import generals.frontend.ui.ChessBoardPanel;
-import generals.frontend.ui.ChessContainer;
+import generals.frontend.ChessContainer;
 import generals.frontend.ui.NotPutChessPanel;
 
 import javax.swing.*;

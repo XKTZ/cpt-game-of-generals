@@ -1,4 +1,4 @@
-package generals.frontend.ui;
+package generals.frontend;
 
 import generals.util.Coordinate;
 
