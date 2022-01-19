@@ -2,6 +2,7 @@ package generals.frontend.ui;
 
 import generals.frontend.GameService;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
@@ -18,12 +19,12 @@ public class NotPutChessPanel extends ChessPanel {
     /**
      * Create not putten chess panel by provide type
      *
-     * @param intType   type
+     * @param intType         type
      * @param chessBoardPanel chess board
      */
     public NotPutChessPanel(int intType, ChessBoardPanel chessBoardPanel, GameService gameService) {
         super(0, 0, chessBoardPanel, gameService);
-        setSize(100, 90);
+        setPreferredSize(new Dimension(100, 90));
         this.intType = intType;
     }
 
@@ -32,9 +33,6 @@ public class NotPutChessPanel extends ChessPanel {
         // low light
         chessBoardPanel.lowlightAll();
         // remove this
-        boolean blnSuc = gameService.put(chessBoardPanel.getContainer().getXTo(), chessBoardPanel.getContainer().getYTo(), intType);
-        var parent = this.getParent();
-        parent.remove(this);
-        parent.repaint();
+        gameService.put(chessBoardPanel.getContainer().getXTo(), chessBoardPanel.getContainer().getYTo(), intType, this);
     }
 }

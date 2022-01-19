@@ -71,7 +71,12 @@ public class ServerMain implements Runnable {
                 }
                 // put
                 if (strData[0].equals(STR_PUT)) {
-                    put(Integer.parseInt(strData[1]), Integer.parseInt(strData[2]), Integer.parseInt(strData[3]), Integer.parseInt(strData[4]));
+                    if (put(Integer.parseInt(strData[1]), Integer.parseInt(strData[2]),
+                            Integer.parseInt(strData[3]), Integer.parseInt(strData[4]))) {
+                        responder.accept(messageOf(1));
+                    } else {
+                        responder.accept(messageOf(0));
+                    }
                 }
                 // move
                 if (strData[0].equals(STR_MOVE)) {
@@ -113,8 +118,8 @@ public class ServerMain implements Runnable {
                 return gameController.connect(strName);
             }
 
-            private void put(int intPlayer, int intChessId, int intX, int intY) {
-                gameController.put(intPlayer, intChessId, intX, intY);
+            private boolean put(int intPlayer, int intChessId, int intX, int intY) {
+                return gameController.put(intPlayer, intChessId, intX, intY);
             }
 
             private void ready() {

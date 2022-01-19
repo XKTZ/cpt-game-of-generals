@@ -22,19 +22,6 @@ public class TestMain {
 
         frame.setLayout(new GridLayout(1, 2));
 
-        HelpChessContainer container = new HelpChessContainer();
-
-        HelpChessPanel chessPanel1 = new HelpChessPanel(container);
-
-        HelpChessPanel chessPanel2 = new HelpChessPanel(container, chessPanel1);
-
-        chessPanel1.setNext(chessPanel2);
-
-        chessPanel1.setChessOn(true);
-
-        frame.add(chessPanel1);
-        frame.add(chessPanel2);
-
         frame.pack();
         frame.setVisible(true);
     }

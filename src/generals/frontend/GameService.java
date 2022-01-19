@@ -1,9 +1,12 @@
 package generals.frontend;
 
 import generals.backend.GameBoard;
+import generals.frontend.ui.NotPutChessPanel;
 import generals.network.Messages;
 import generals.network.XSocket;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.function.Consumer;
 
 import static generals.network.Messages.*;
@@ -55,13 +58,23 @@ public class GameService {
      * @param intY    y
      * @param intType type
      */
-    public boolean put(int intX, int intY, int intType) {
-        socket.request(messageOf(STR_PUT, intPlayer, intType, intX, intY));
-        return true;
+    public void put(int intX, int intY, int intType, NotPutChessPanel notPutChessPanel) {
+        socket.request(messageOf(STR_PUT, intPlayer, intType, intX, intY), (resp) -> {
+            if (Integer.parseInt(resp[0]) == INT_SUCCESS) {
+                var parent = notPutChessPanel.getParent();
+                parent.remove(notPutChessPanel);
+                JScrollPane scrollPane = (JScrollPane) parent.getParent().getParent();
+                int valueOld = scrollPane.getVerticalScrollBar().getValue();
+                // scroll it a bit
+                scrollPane.getVerticalScrollBar().setValue(1);
+                scrollPane.getVerticalScrollBar().setValue(valueOld);
+            }
+        });
     }
 
     /**
      * Get the board, then do something
+     *
      * @param then then
      */
     public void getBoard(Consumer<String[]> then) {
