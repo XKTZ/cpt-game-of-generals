@@ -4,6 +4,7 @@ import generals.backend.GameBoard;
 import generals.frontend.ui.NotPutChessPanel;
 import generals.network.Messages;
 import generals.network.XSocket;
+import generals.util.Coordinate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,5 +80,45 @@ public class GameService {
      */
     public void getBoard(Consumer<String[]> then) {
         socket.request(messageOf(STR_BOARD, intPlayer), then);
+    }
+
+    /**
+     * Get the available position, then do then
+     *
+     * @param intX x
+     * @param intY y
+     * @param then then
+     */
+    public void available(int intX, int intY, Consumer<Coordinate[]> then) {
+        socket.request(messageOf(STR_AVAILABLE, intPlayer, intX, intY), (resp) -> {
+            int intN = Integer.parseInt(resp[0]);
+            Coordinate[] availablePositions = new Coordinate[intN];
+            int intOn = 1;
+            for (int intCnt = 0; intCnt < intN; intCnt++) {
+                availablePositions[intCnt] = Coordinate.of(
+                        Integer.parseInt(resp[intOn]),
+                        Integer.parseInt(resp[intOn + 1])
+                );
+                intOn += 2;
+            }
+            then.accept(availablePositions);
+        });
+    }
+
+    /**
+     * Move {x, y} to {xto, yto}
+     *
+     * @param intX   x
+     * @param intY   y
+     * @param intXTo xto
+     * @param intYTo yto
+     */
+    public void move(int intX, int intY, int intXTo, int intYTo) {
+        socket.request(messageOf(STR_MOVE, intPlayer, intX, intY, intXTo, intYTo), (ignored) -> {
+        });
+    }
+
+    public int getPlayer() {
+        return intPlayer;
     }
 }

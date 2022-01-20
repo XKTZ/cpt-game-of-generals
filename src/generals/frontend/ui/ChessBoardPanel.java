@@ -46,34 +46,7 @@ public class ChessBoardPanel extends JPanel {
      * @param intY intY
      */
     public void highlightAvailable(int intX, int intY) {
-        /*
-        socket.request(messageOf("available", String.valueOf(intPlayer), String.valueOf(intX), String.valueOf(intY)),
-                (resp) -> {
-                    // ...
-                });
-         */
-
-        List<Coordinate> listCoordinate = new ArrayList<>();
-
-        if (intX == 0 && intY == 0) {
-            for (int i = 1; i <= 3; i++) {
-                for (int j = 1; j <= 9; j++) {
-                    if (panels[i][j].getType() == 0) {
-                        listCoordinate.add(Coordinate.of(i, j));
-                    }
-                }
-            }
-        } else {
-            int[] dx = new int[]{1, 0, -1, 0};
-            int[] dy = new int[]{0, 1, 0, -1};
-
-            for (int i = 0; i < 4; i++) {
-                if (intX + dx[i] >= 1 && intX + dx[i] <= 8 && intY + dy[i] >= 1 && intY + dy[i] <= 9) {
-                    listCoordinate.add(Coordinate.of(intX + dx[i], intY + dy[i]));
-                }
-            }
-        }
-        highlightCoordinates(listCoordinate.toArray(new Coordinate[0]));
+        gameService.available(intX, intY, this::highlightCoordinates);
     }
 
     public void lowlightAll() {

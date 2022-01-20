@@ -1,5 +1,6 @@
 package generals.frontend.ui;
 
+import generals.frontend.GameImages;
 import generals.frontend.GameService;
 
 import javax.swing.*;
@@ -68,8 +69,12 @@ public class ChessPanel extends JPanel implements MouseListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.BLACK);
-        g.drawString(String.valueOf(intType), 0, 0);
+        if (intType == -1) {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, 100, 90);
+        } else {
+            g.drawImage(GameImages.LEVEL_IMAGES[intType], 0, 0, null);
+        }
     }
 
     @Override
@@ -79,12 +84,12 @@ public class ChessPanel extends JPanel implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         chessBoardPanel.highlightAvailable(intX, intY);
-        chessBoardPanel.getContainer().setFrom(intX, intY);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         chessBoardPanel.lowlightAll();
+        gameService.move(intX, intY, chessBoardPanel.getContainer().getX(), chessBoardPanel.getContainer().getY());
     }
 
     @Override

@@ -12,6 +12,7 @@ public class Chess {
 
     // different type of chess
 
+    public static final int INT_OCCUPIED_BY_OTHERS = -1;
     public static final int INT_EMPTY_SPACE = 0;
     public static final int INT_FLAG = 1;
     public static final int INT_SPY = 2;

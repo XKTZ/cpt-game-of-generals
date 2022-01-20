@@ -12,11 +12,6 @@ import java.awt.event.MouseEvent;
 public class NotPutChessPanel extends ChessPanel {
 
     /**
-     * Type of chess
-     */
-    private int intType;
-
-    /**
      * Create not putten chess panel by provide type
      *
      * @param intType         type
@@ -25,7 +20,13 @@ public class NotPutChessPanel extends ChessPanel {
     public NotPutChessPanel(int intType, ChessBoardPanel chessBoardPanel, GameService gameService) {
         super(0, 0, chessBoardPanel, gameService);
         setPreferredSize(new Dimension(100, 90));
+
         this.intType = intType;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
     }
 
     @Override
@@ -33,6 +34,6 @@ public class NotPutChessPanel extends ChessPanel {
         // low light
         chessBoardPanel.lowlightAll();
         // remove this
-        gameService.put(chessBoardPanel.getContainer().getXTo(), chessBoardPanel.getContainer().getYTo(), intType, this);
+        gameService.put(chessBoardPanel.getContainer().getX(), chessBoardPanel.getContainer().getY(), intType, this);
     }
 }

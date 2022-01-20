@@ -1,15 +1,19 @@
 package generals.main;
 
+import generals.backend.Chess;
 import generals.backend.GameBoard;
 import generals.frontend.GameService;
 import generals.frontend.ui.ChessBoardPanel;
 import generals.frontend.ChessContainer;
+import generals.frontend.ui.ChessPanel;
 import generals.frontend.ui.NotPutChessPanel;
 import generals.frontend.ui.PiecePickPanel;
 import generals.network.XSocket;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static generals.network.Messages.*;
 
@@ -29,6 +33,8 @@ public class ClientMain extends JFrame implements Runnable {
 
     private GameService gameService;
 
+    private ChessBoardPanel chessBoard;
+
     public ClientMain() {
         super("Games of Generals");
         setPreferredSize(new Dimension(1280, 720));
@@ -36,18 +42,30 @@ public class ClientMain extends JFrame implements Runnable {
         setLayout(null);
 
         this.sock = new XSocket(createName(), "localhost", 8888, (strData, ignored) -> {
-
+            System.out.println(Arrays.toString(strData));
             if (strData[0].equals(STR_UPDATE)) {
                 gameService.getBoard((board) -> {
                     int intCnt = 0;
                     for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow ++) {
                         for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol ++) {
-                            System.out.print(board[intCnt] + " ");
-                            intCnt  ++;
+                            var panelOn = chessBoard.getPanels()[intRow][intCol];
+                            // get the data
+                            int[] intData = Arrays.stream(board[intCnt].split("-")).mapToInt(Integer::parseInt).toArray();
+                            // set the panel on
+                            if (intData[1] == Chess.INT_EMPTY_SPACE) {
+                                panelOn.setType(Chess.INT_EMPTY_SPACE);
+                            } else if (intData[0] != gameService.getPlayer()) {
+                                panelOn.setType(Chess.INT_OCCUPIED_BY_OTHERS);
+                            } else {
+                                panelOn.setType(intData[1]);
+                            }
+                            // repaint
+                            panelOn.repaint();
+
+                            // add cnt
+                            intCnt ++;
                         }
-                        System.out.println();
                     }
-                    System.out.println("===============================");
                 });
             }
 
@@ -62,13 +80,9 @@ public class ClientMain extends JFrame implements Runnable {
 
         gameService.connect("yidi");
 
-        gameService.ready();
-
-
-
         ChessContainer container = new ChessContainer();
 
-        var chessBoard = new ChessBoardPanel(1, container, gameService);
+        chessBoard = new ChessBoardPanel(1, container, gameService);
         chessBoard.setLocation(0, 0);
 
         add(chessBoard);
