@@ -161,7 +161,17 @@ public class GameBoard {
     public Coordinate[] availablePosition(int intPlayer, int intX, int intY) {
         // if game not started yet, use another available position method
         if (getPlayerOn() == 0) {
+            // if is checking putting or checking moving
+            // if int X is not in range [1, INT_ROWS] and Y is not in range [1, INT_COLS], it is putting
+            if ((1 <= intX && intX <= INT_ROWS)
+                    && (1 <= intY && intY <= INT_COLS)
+                    && (board[intX][intY].getPlayer() != intPlayer)) {
+                return new Coordinate[]{};
+            }
             return availablePositionBeforeStart(intPlayer);
+        }
+        if (board[intX][intY].getPlayer() != intPlayer) {
+            return new Coordinate[]{};
         }
         List<Coordinate> coordinates = new ArrayList<>();
         for (int intCnt = 0, intXNew, intYNew; intCnt < 4; intCnt++) {
@@ -171,23 +181,21 @@ public class GameBoard {
                 coordinates.add(new Coordinate(intXNew, intYNew));
             }
         }
-        return coordinates.toArray(new Coordinate[]{});
+        return coordinates.toArray(Coordinate[]::new);
     }
 
     /**
      * Get the available position to move for {x, y} before game start
      *
      * @param intPlayer player
-     * @param intX      x
-     * @param intY      y
      * @return coordinate can move
      */
     public Coordinate[] availablePositionBeforeStart(int intPlayer) {
         List<Coordinate> ret = new ArrayList<>();
         // player 1: from row 1 to row 3
         if (intPlayer == 1) {
-            for (int intRow = 1; intRow <= 3; intRow ++) {
-                for (int intCol = 1; intCol <= INT_COLS; intCol ++) {
+            for (int intRow = 1; intRow <= 3; intRow++) {
+                for (int intCol = 1; intCol <= INT_COLS; intCol++) {
                     if (board[intRow][intCol].isEmpty()) {
                         ret.add(Coordinate.of(intRow, intCol));
                     }
@@ -196,8 +204,8 @@ public class GameBoard {
         }
         // player 2: from row 6 to row 8
         else {
-            for (int intRow = 6; intRow <= INT_ROWS; intRow ++) {
-                for (int intCol = 1; intCol <= INT_COLS; intCol ++) {
+            for (int intRow = 6; intRow <= INT_ROWS; intRow++) {
+                for (int intCol = 1; intCol <= INT_COLS; intCol++) {
                     if (board[intRow][intCol].isEmpty()) {
                         ret.add(Coordinate.of(intRow, intCol));
                     }
