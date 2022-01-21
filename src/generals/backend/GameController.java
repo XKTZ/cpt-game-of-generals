@@ -2,6 +2,7 @@ package generals.backend;
 
 import generals.network.XSocket;
 import generals.util.Coordinate;
+import generals.util.log.Loggable;
 
 import java.util.Arrays;
 
@@ -13,7 +14,7 @@ import static generals.network.Messages.*;
  * @author Yidi Chen
  * @date 2022-01-17
  */
-public class GameController {
+public class GameController implements Loggable {
 
     /**
      * Game start message
@@ -124,6 +125,9 @@ public class GameController {
         Coordinate coor = getCoordinate(intPlayer, intX, intY);
         intX = coor.intX;
         intY = coor.intY;
+        coor = getCoordinate(intPlayer, intXTo, intYTo);
+        intXTo = coor.intX;
+        intYTo = coor.intY;
 
         boolean blnRes = board.move(intPlayer, intX, intY, intXTo, intYTo);
 
@@ -132,7 +136,7 @@ public class GameController {
         if ((intWinner = winner()) != 0) {
             messageController.sendMessage(String.format(STR_WINNING_MESSAGE, strPlayerName[intWinner]));
             reset();
-            boardUpdated();
+            restartGame();
         }
         // if no one win, but update
         else if (blnRes) {
@@ -228,6 +232,13 @@ public class GameController {
     }
 
     /**
+     * Send the restart game message
+     */
+    public void restartGame() {
+        socket.request(messageOf(STR_RESTART));
+    }
+
+    /**
      * Get the coordinate
      *
      * @param intPlayer player
@@ -243,4 +254,5 @@ public class GameController {
             return Coordinate.of(GameBoard.INT_ROWS + 1 - intX, GameBoard.INT_COLS + 1 - intY);
         }
     }
+
 }

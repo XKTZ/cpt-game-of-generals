@@ -1,5 +1,6 @@
 package generals.frontend.ui;
 
+import generals.frontend.GameImages;
 import generals.frontend.HelpChessContainer;
 
 import javax.swing.*;
@@ -96,6 +97,8 @@ public class HelpChessPanel extends JPanel implements MouseListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // g.drawImage(); // draw the flag
+        if (blnChessOn) {
+            g.drawImage(GameImages.IMAGE_FLAG, 0, 0, null);
+        }
     }
 }

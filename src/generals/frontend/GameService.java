@@ -69,6 +69,17 @@ public class GameService {
                 // scroll it a bit
                 scrollPane.getVerticalScrollBar().setValue(1);
                 scrollPane.getVerticalScrollBar().setValue(valueOld);
+
+                // if the scroll pane's viewpoint is empty
+                if (((JPanel) scrollPane.getViewport().getView()).getComponents().length == 0) {
+                    scrollPane.getViewport().remove(scrollPane.getViewport().getView());
+                    scrollPane.getViewport().add(new JButton("Ready"){{
+                        addActionListener((e) -> {
+                            socket.request(messageOf(STR_READY));
+                            this.setEnabled(false);
+                        });
+                    }});
+                }
             }
         });
     }

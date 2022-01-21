@@ -8,7 +8,6 @@ import generals.network.RequestHandler;
 import generals.network.XSocket;
 import generals.util.Coordinate;
 
-import javax.xml.transform.sax.SAXTransformerFactory;
 import java.util.Arrays;
 import java.util.function.Consumer;
 

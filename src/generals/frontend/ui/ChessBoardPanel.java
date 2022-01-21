@@ -22,8 +22,7 @@ public class ChessBoardPanel extends JPanel {
 
     private GameService gameService;
 
-    public ChessBoardPanel(int intPlayer,
-                           ChessContainer container, GameService gameService) {
+    public ChessBoardPanel(ChessContainer container, GameService gameService) {
         super(new GridLayout(GameBoard.INT_ROWS, GameBoard.INT_COLS));
 
         setSize(900, 720);

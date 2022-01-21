@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
@@ -123,9 +124,16 @@ public class XSocket implements AutoCloseable {
     private String strName;
 
     /**
+     * Lock
+     */
+    ReentrantLock lock = new ReentrantLock();
+
+    /**
      * the listener
      */
     ActionListener listener = (e) -> {
+        lock.lock();
+
         // gain the data and split them
         String[] strData = ssm.readText().split(STR_MESSAGE_SPLITTER);
 
@@ -154,6 +162,8 @@ public class XSocket implements AutoCloseable {
             Consumer<String[]> responseHandler = responseHandlers.get(intId);
             responseHandler.accept(strDataCut);
         }
+
+        lock.unlock();
     };
 
     /**
