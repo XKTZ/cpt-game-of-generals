@@ -4,8 +4,7 @@ import generals.network.XSocket;
 import generals.util.Coordinate;
 import generals.util.log.Loggable;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Arrays;
 
 import static generals.network.Messages.*;
@@ -137,6 +136,14 @@ public class GameController implements Loggable {
         // if someone has won
         if ((intWinner = winner()) != 0) {
             messageController.sendMessage(String.format(STR_WINNING_MESSAGE, strPlayerName[intWinner]));
+            try{
+                PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter("winner.txt", true)));
+                //does not have user inputted name yet
+                printWriter.println(strPlayerName[intWinner]);
+                printWriter.close();
+            }catch(IOException e) {
+                System.out.println("error file writing");
+            }
 
             reset();
             restartGame();
