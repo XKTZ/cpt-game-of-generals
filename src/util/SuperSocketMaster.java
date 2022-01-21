@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * <h1>SuperSocketMaster</h1>
@@ -25,18 +26,23 @@ import java.util.Enumeration;
  * They can recieve incoming text over the socket<p>
  * Incoming text triggers an ActionEvent<p>
  * This class is meant to be used in Java Swing/AWT programs
- * @author  Alfred Cadawas
+ *
+ * @author Alfred Cadawas
  * @version 2.0
- * @since   2016-04-21 
+ * @since 2016-04-21
  */
-public class SuperSocketMaster{
+public class SuperSocketMaster {
     // Properties
     private int intPort = 1337;
     private String strServerIP = null;
     private String strIncomingText = null;
+    private ReentrantLock strIncomingTextLock = new ReentrantLock();
     private SocketConnection soccon = null;
+
+
     transient ActionListener actionListener = null;
     // Methods
+
     /**
      * Sends text over the open socket<p>
      * If the socket is not open, the text goes nowhere<p>
@@ -45,49 +51,52 @@ public class SuperSocketMaster{
      * @param strText Text you want to send over the network socket
      * @return Returns true if data was successfully sent over the network
      */
-    public boolean sendText(String strText){
-        if(soccon != null){
+    public boolean sendText(String strText) {
+        if (soccon != null) {
             return soccon.sendText(strText);
         }
         return false;
     }
+
     /**
      * Reads the text that was recieved from the open socket<p>
      * Should only be called after and ActionEvent is triggered
      *
      * @return Returns recieved text from the socket or an empty string
      */
-    public String readText(){
-        if(soccon != null){
+    public String readText() {
+        if (soccon != null) {
             return strIncomingText;
-        }else{
+        } else {
             return "";
         }
     }
+
     /**
      * Disconnects all open sockets<p>
      * Servers will disconnect all clients before closing the server socket<p>
      * Clients will disconnect their socket connection to the server
      */
-    public void disconnect(){
-        if(soccon != null){
+    public void disconnect() {
+        if (soccon != null) {
             soccon.closeConnection();
             soccon = null;
         }
     }
+
     /**
      * Gets the IP Address of the computer<p>
      * Should grab the Ethernet IP first if both Wifi and Ethernet are connected
      *
      * @return Returns computer's IP address
      */
-    public String getMyAddress(){
+    public String getMyAddress() {
         try {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = (NetworkInterface) networkInterfaces.nextElement();
                 Enumeration<InetAddress> niAddresses = networkInterface.getInetAddresses();
-                while(niAddresses.hasMoreElements()) {
+                while (niAddresses.hasMoreElements()) {
                     InetAddress inetAddress = (InetAddress) niAddresses.nextElement();
                     if (!inetAddress.isLinkLocalAddress() && !inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
                         return inetAddress.getHostAddress();
@@ -99,18 +108,20 @@ public class SuperSocketMaster{
         }
         return "127.0.0.1";
     }
+
     /**
      * Gets the Hostname of the computer
      *
      * @return Returns computer's Hostname
      */
-    public String getMyHostname(){
-        try{
+    public String getMyHostname() {
+        try {
             return InetAddress.getLocalHost().getHostName();
-        }catch(UnknownHostException e){
+        } catch (UnknownHostException e) {
             return "localhost";
         }
     }
+
     /**
      * Opens a socket connection<p>
      * Server - Opens a server socket and waits for clients to connect<p>
@@ -119,48 +130,53 @@ public class SuperSocketMaster{
      *
      * @return Returns true if socket connection was successfull
      */
-    public boolean connect(){
+    public boolean connect() {
         // First check to see if you can make a socket connection
         soccon = new SocketConnection(strServerIP, intPort, this);
-        if(soccon.openConnection()){
+        if (soccon.openConnection()) {
             return true;
-        }else{
+        } else {
             soccon = null;
             return false;
         }
     }
+
     private synchronized void addActionListener(ActionListener listener) {
         actionListener = AWTEventMulticaster.add(actionListener, listener);
     }
+
     private synchronized void removeActionListener(ActionListener listener) {
         actionListener = AWTEventMulticaster.remove(actionListener, listener);
     }
+
     private void postActionEvent() {
         // when event occurs which causes "action" semantic
         ActionListener listener = actionListener;
         if (listener != null) {
-            listener.actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"Network Message"));
+            listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Network Message"));
         }
     }
     // Constructor
+
     /**
      * Server Mode SuperSocketMaster Constructor<p>
      *
-     * @param intPort TCP Port you want to use for your connection
+     * @param intPort  TCP Port you want to use for your connection
      * @param listener Swing/AWT program's ActionListener.  Usually "this"
      */
-    public SuperSocketMaster(int intPort, ActionListener listener){
+    public SuperSocketMaster(int intPort, ActionListener listener) {
         this.addActionListener(listener);
         this.intPort = intPort;
     }
+
     /**
      * Client Mode SuperSocketMaster Constructor<p>
      *
      * @param strServerIP Hostname or IP address of the server you want to connect to
-     * @param intPort TCP Port you want to use for your connection
-     * @param listener Swing/AWT program's ActionListener.  Usually "this"
+     * @param intPort     TCP Port you want to use for your connection
+     * @param listener    Swing/AWT program's ActionListener.  Usually "this"
      */
-    public SuperSocketMaster(String strServerIP, int intPort, ActionListener listener){
+    public SuperSocketMaster(String strServerIP, int intPort, ActionListener listener) {
         this.addActionListener(listener);
         this.intPort = intPort;
         this.strServerIP = strServerIP;
@@ -175,7 +191,7 @@ public class SuperSocketMaster{
      * Client opens a socket and starts listening for data
      * *****************************************************************/
 
-    private class SocketConnection implements Runnable, ActionListener{
+    private class SocketConnection implements Runnable, ActionListener {
         SuperSocketMaster parentssm = null;
         int intPort = 1337;
         String strServerIP = null;
@@ -190,8 +206,9 @@ public class SuperSocketMaster{
         boolean blnListenForClients = true;
 
         Timer theTimer;
-        public void actionPerformed(ActionEvent evt){
-            if(evt.getSource() == theTimer){
+
+        public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource() == theTimer) {
                 //System.out.println("Heartbeat");
                 this.sendText("Heartbeat");
             }
@@ -214,11 +231,11 @@ public class SuperSocketMaster{
                 // Client mode is much easier.
                 ////System.out.println("Sending message: "+strText);
                 // First check if connecion is down
-                if(socketObject != null){
-                    if(outBuffer.checkError()){
+                if (socketObject != null) {
+                    if (outBuffer.checkError()) {
                         closeConnection();
                         return false;
-                    }else{
+                    } else {
                         outBuffer.println(strText);
                         // restarting Heartbeat after last message that was sent.
                         // No need to send heartbeat if there are lots of network messages being sent
@@ -230,18 +247,19 @@ public class SuperSocketMaster{
                 return false;
             }
         }
+
         // This might be called buy two areas simultaneously!
         // Might be called by the disconnecting while loop in the run method
         // Might be called by the disconnect method.
-        public void removeClient(ClientConnection clientConnection){
-            if(clientConnection.socketObject != null){
+        public void removeClient(ClientConnection clientConnection) {
+            if (clientConnection.socketObject != null) {
                 System.out.println("Trying to close server connection to client");
-                try{
+                try {
                     // Since two methods might be running this code simultaneously
                     // Some of the objects might be null
                     // So catch the null pointer exception
                     // the first method that accesses this should close everything correctly
-                    try{
+                    try {
                         clientConnection.socketObject.shutdownInput();
                         clientConnection.socketObject.shutdownOutput();
                         clientConnection.socketObject.close();
@@ -254,15 +272,16 @@ public class SuperSocketMaster{
                         System.out.println("Done closing server connection to client");
                         clientconnections.remove(clientConnection);
                         clientConnection = null;
-                        System.out.println("Server removed a client connection.  Current Size: "+clientconnections.size());
-                    }catch(NullPointerException e){
+                        System.out.println("Server removed a client connection.  Current Size: " + clientconnections.size());
+                    } catch (NullPointerException e) {
                     }
-                }catch(IOException e){
+                } catch (IOException e) {
                 }
             }
         }
-        public void run(){
-            if(strServerIP == null || strServerIP.equals("")){
+
+        public void run() {
+            if (strServerIP == null || strServerIP.equals("")) {
                 // Server
                 // while loop to listen for incoming clients
                 // When a client connects, create a socket object
@@ -276,21 +295,23 @@ public class SuperSocketMaster{
                         clientconnections.addElement(singleconnection);
                         Thread t1 = new Thread(singleconnection);
                         t1.start();
-                        System.out.println("Server accepted a client connection:  Current Size: "+clientconnections.size());
+                        System.out.println("Server accepted a client connection:  Current Size: " + clientconnections.size());
                     } catch (IOException e) {
                         blnListenForClients = false;
                     }
                 }
-            }else{
+            } else {
                 // Client
                 // Already connected to a server and have a socket object
                 // while loop to listen for incoming data
                 while (strIncomingText != null) {
                     try {
                         strIncomingText = inBuffer.readLine();
-                        if(strIncomingText != null && !strIncomingText.equals("Heartbeat")){
+                        if (strIncomingText != null && !strIncomingText.equals("Heartbeat")) {
+                            this.parentssm.strIncomingTextLock.lock();
                             this.parentssm.strIncomingText = strIncomingText;
                             this.parentssm.postActionEvent();
+                            this.parentssm.strIncomingTextLock.unlock();
                         }
                     } catch (IOException e) {
                     }
@@ -300,34 +321,35 @@ public class SuperSocketMaster{
                 closeConnection();
             }
         }
-        public void closeConnection(){
+
+        public void closeConnection() {
             // If server, kill all client sockets then close the serversocket
-            if(strServerIP == null || strServerIP.equals("")){
+            if (strServerIP == null || strServerIP.equals("")) {
                 blnListenForClients = false;
-                while(clientconnections.size() > 0){
+                while (clientconnections.size() > 0) {
                     removeClient(clientconnections.get(0));
                     //System.out.println("Trying to remove all clients");
                 }
-                try{
+                try {
                     serverSocketObject.close();
-                }catch(IOException e){
+                } catch (IOException e) {
                 }
                 serverSocketObject = null;
                 clientconnections = null;
                 theTimer.stop();
-            }else{
+            } else {
                 // If client, just kill the socket
                 // This might be called buy two areas simultaneously!
                 // Might be called by the disconnecting while loop in the run method
                 // Might be called by the disconnect method.
-                if(socketObject != null){
+                if (socketObject != null) {
                     System.out.println("Trying to close the client conneccion");
-                    try{
+                    try {
                         // Since two methods might be running this code simultaneously
                         // Some of the objects might be null
                         // So catch the null pointer exception
                         // the first method that accesses this should close everything correctly
-                        try{
+                        try {
                             socketObject.shutdownInput();
                             socketObject.shutdownOutput();
                             socketObject.close();
@@ -338,16 +360,17 @@ public class SuperSocketMaster{
                             outBuffer = null;
                             strIncomingText = null;
                             System.out.println("Done closing client connection");
-                        }catch(NullPointerException e){
+                        } catch (NullPointerException e) {
                         }
-                    }catch(IOException e){
+                    } catch (IOException e) {
                     }
                 }
                 theTimer.stop();
             }
         }
-        public boolean openConnection(){
-            if(strServerIP == null || strServerIP.equals("")){
+
+        public boolean openConnection() {
+            if (strServerIP == null || strServerIP.equals("")) {
                 // Server style connection.
                 // Open Port
                 // Create a serversocket object
@@ -362,7 +385,7 @@ public class SuperSocketMaster{
                 // Heartbeat start
                 theTimer.start();
                 return true;
-            }else{
+            } else {
                 // Client style connection.
                 // Open port
                 // Create a socket object
@@ -381,7 +404,8 @@ public class SuperSocketMaster{
                 return true;
             }
         }
-        public SocketConnection(String strServerIP, int intPort, SuperSocketMaster parentssm){
+
+        public SocketConnection(String strServerIP, int intPort, SuperSocketMaster parentssm) {
             this.strServerIP = strServerIP;
             this.intPort = intPort;
             this.parentssm = parentssm;
@@ -393,14 +417,16 @@ public class SuperSocketMaster{
 
         }
     }
-    private class ClientConnection implements Runnable{
+
+    private class ClientConnection implements Runnable {
         SuperSocketMaster parentssm = null;
         SocketConnection socketConnection = null;
         String strIncomingText = "";
         Socket socketObject = null;
         PrintWriter outBuffer = null;
         BufferedReader inBuffer = null;
-        public void run(){
+
+        public void run() {
             try {
                 inBuffer = new BufferedReader(new InputStreamReader(socketObject.getInputStream()));
                 outBuffer = new PrintWriter(socketObject.getOutputStream(), true);
@@ -409,16 +435,18 @@ public class SuperSocketMaster{
             while (strIncomingText != null) {
                 try {
                     strIncomingText = inBuffer.readLine();
-                    if(strIncomingText != null && !strIncomingText.equals("Heartbeat")){
+                    if (strIncomingText != null && !strIncomingText.equals("Heartbeat")) {
                         // Send to all other clients except for this recieving one
                         for (int intCounter = 0; intCounter < socketConnection.clientconnections.size(); intCounter++) {
-                            if(socketConnection.clientconnections.get(intCounter) != this){
+                            if (socketConnection.clientconnections.get(intCounter) != this) {
                                 socketConnection.clientconnections.get(intCounter).sendText(strIncomingText);
                             }
                         }
                         // Then set text
+                        this.parentssm.strIncomingTextLock.lock();
                         this.parentssm.strIncomingText = strIncomingText;
                         this.parentssm.postActionEvent();
+                        this.parentssm.strIncomingTextLock.unlock();
                     }
                 } catch (IOException e) {
                 }
@@ -426,16 +454,18 @@ public class SuperSocketMaster{
             System.out.println("reading while loop done");
             socketConnection.removeClient(this);
         }
+
         public boolean sendText(String strText) {
-            if(outBuffer.checkError()){
+            if (outBuffer.checkError()) {
                 socketConnection.removeClient(this);
                 return false;
-            }else{
+            } else {
                 outBuffer.println(strText);
                 return true;
             }
         }
-        public ClientConnection(SuperSocketMaster parentssm, Socket socketObject, SocketConnection socketConnection){
+
+        public ClientConnection(SuperSocketMaster parentssm, Socket socketObject, SocketConnection socketConnection) {
             this.socketConnection = socketConnection;
             this.socketObject = socketObject;
             this.parentssm = parentssm;

@@ -30,6 +30,8 @@ public interface Messages {
 
     String STR_MESSAGE = "message";
 
+    String STR_RESTART = "restart";
+
     /**
      * Turn variadic args to array
      *

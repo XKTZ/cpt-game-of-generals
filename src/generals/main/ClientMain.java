@@ -9,6 +9,7 @@ import generals.frontend.ui.ChessPanel;
 import generals.frontend.ui.NotPutChessPanel;
 import generals.frontend.ui.PiecePickPanel;
 import generals.network.XSocket;
+import generals.util.log.Loggable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,9 +32,13 @@ public class ClientMain extends JFrame implements Runnable {
 
     private XSocket sock;
 
+    private ChessContainer container;
+
     private GameService gameService;
 
     private ChessBoardPanel chessBoard;
+
+    private PiecePickPanel piecePickPanel;
 
     public ClientMain() {
         super("Games of Generals");
@@ -42,33 +47,46 @@ public class ClientMain extends JFrame implements Runnable {
         setLayout(null);
 
         this.sock = new XSocket(createName(), "localhost", 8888, (strData, ignored) -> {
-            System.out.println(Arrays.toString(strData));
             if (strData[0].equals(STR_UPDATE)) {
-                gameService.getBoard((board) -> {
-                    int intCnt = 0;
-                    for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow ++) {
-                        for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol ++) {
-                            var panelOn = chessBoard.getPanels()[intRow][intCol];
-                            // get the data
-                            int[] intData = Arrays.stream(board[intCnt].split("-")).mapToInt(Integer::parseInt).toArray();
-                            // set the panel on
-                            if (intData[1] == Chess.INT_EMPTY_SPACE) {
-                                panelOn.setType(Chess.INT_EMPTY_SPACE);
-                            } else if (intData[0] != gameService.getPlayer()) {
-                                panelOn.setType(Chess.INT_OCCUPIED_BY_OTHERS);
-                            } else {
-                                panelOn.setType(intData[1]);
-                            }
-                            // repaint
-                            panelOn.repaint();
-
-                            // add cnt
-                            intCnt ++;
-                        }
-                    }
-                });
+                refresh();
             }
+            if (strData[0].equals(STR_RESTART)) {
+                this.remove(chessBoard);
+                this.remove(piecePickPanel);
+                chessBoard = getChessBoard();
+                piecePickPanel = getPiecePickPanel();
+                this.add(chessBoard);
+                this.add(piecePickPanel);
+                refresh();
+            }
+        });
+    }
 
+    private void refresh() {
+        gameService.getBoard((board) -> {
+            int intCnt = 0;
+            for (int intRow = 1; intRow <= GameBoard.INT_ROWS; intRow++) {
+                for (int intCol = 1; intCol <= GameBoard.INT_COLS; intCol++) {
+                    var panelOn = chessBoard.getPanels()[intRow][intCol];
+                    // get the data
+                    int[] intData = Arrays.stream(board[intCnt].split("-")).mapToInt(Integer::parseInt).toArray();
+                    // set the panel on
+                    if (intData[1] == Chess.INT_EMPTY_SPACE) {
+                        panelOn.setType(Chess.INT_EMPTY_SPACE);
+                    } else if (intData[0] != gameService.getPlayer()) {
+                        panelOn.setType(Chess.INT_OCCUPIED_BY_OTHERS);
+                    } else {
+                        panelOn.setType(intData[1]);
+                    }
+                    // repaint
+                    panelOn.repaint();
+
+                    // add cnt
+                    intCnt++;
+                }
+            }
+            this.repaint();
+            this.pack();
         });
     }
 
@@ -80,20 +98,31 @@ public class ClientMain extends JFrame implements Runnable {
 
         gameService.connect("yidi");
 
-        ChessContainer container = new ChessContainer();
+        container = new ChessContainer();
 
-        chessBoard = new ChessBoardPanel(1, container, gameService);
-        chessBoard.setLocation(0, 0);
+        chessBoard = getChessBoard();
+
+        piecePickPanel = getPiecePickPanel();
 
         add(chessBoard);
 
-        PiecePickPanel piecePickPanel = new PiecePickPanel();
-        piecePickPanel.init(chessBoard, gameService);
-        piecePickPanel.setLocation(900, 340);
         add(piecePickPanel);
 
         pack();
         setVisible(true);
+    }
+
+    private ChessBoardPanel getChessBoard() {
+        return new ChessBoardPanel(container, gameService) {{
+            setLocation(0, 0);
+        }};
+    }
+
+    private PiecePickPanel getPiecePickPanel() {
+        return new PiecePickPanel() {{
+            init(chessBoard, gameService);
+            setLocation(900, 340);
+        }};
     }
 
     public static void main(String[] args) throws Exception {

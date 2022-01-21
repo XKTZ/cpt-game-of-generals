@@ -5,6 +5,7 @@ import generals.frontend.HelpChessContainer;
 import generals.frontend.ui.ChessBoardPanel;
 import generals.frontend.ChessContainer;
 import generals.frontend.ui.HelpChessPanel;
+import generals.frontend.ui.HelpPanel;
 import generals.frontend.ui.NotPutChessPanel;
 
 import javax.swing.*;
@@ -20,7 +21,10 @@ public class TestMain {
         frame.setPreferredSize(new Dimension(1280, 720));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        frame.setLayout(new GridLayout(1, 2));
+        frame.setLayout(null);
+        HelpPanel helpPanel = new HelpPanel();
+        helpPanel.setLocation(0, 0);
+        frame.add(helpPanel);
 
         frame.pack();
         frame.setVisible(true);

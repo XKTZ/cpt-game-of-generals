@@ -67,8 +67,8 @@ public class GameBoard {
         // check: if position going is valid
         // check: if it is an available move, |xon - xto| + |yon - yto| must = 1
         if (intPlayer != getPlayerOn()
-                && Math.abs(intXOn - intXTo) + Math.abs(intYOn - intYTo) != 1
-                && !valid(intXOn, intYOn)) {
+                || Math.abs(intXOn - intXTo) + Math.abs(intYOn - intYTo) != 1
+                || (!valid(intXOn, intYOn))) {
             return false;
         }
 
@@ -77,12 +77,12 @@ public class GameBoard {
         // get the player, check if it is equal to player of the chess
         // if it is not equal, do nothing
         // if the chess is empty, do nothing
-        if (chess.isEmpty() && chess.getPlayer() != intPlayer) {
+        if (chess.isEmpty() || chess.getPlayer() != intPlayer) {
             return false;
         }
 
         // get chess to
-        Chess chessTo = board[intXOn][intYOn];
+        Chess chessTo = board[intXTo][intYTo];
 
         // make sure they are not the two same chesses
         if (chessTo.getPlayer() == chess.getPlayer()) {
@@ -90,7 +90,7 @@ public class GameBoard {
         }
 
         // compare two chess
-        int intCmp = Chess.compare(chessTo, chessTo);
+        int intCmp = Chess.compare(chess, chessTo);
 
         // if equal, switch both chess to empty
         if (intCmp == 0) {
@@ -170,6 +170,10 @@ public class GameBoard {
             }
             return availablePositionBeforeStart(intPlayer);
         }
+        // if this is not player's turn, no one can move
+        else if (getPlayerOn() != intPlayer) {
+            return new Coordinate[]{};
+        }
         if (board[intX][intY].getPlayer() != intPlayer) {
             return new Coordinate[]{};
         }
@@ -246,7 +250,7 @@ public class GameBoard {
             return 0;
         }
         // check if player 1's flag reaches bottom or player 2's flag reaches top
-        for (int intCol = 0; intCol < INT_COLS; intCol++) {
+        for (int intCol = 1; intCol <= INT_COLS; intCol++) {
             if (board[INT_ROWS][intCol].getPlayer() == 1 && board[INT_ROWS][intCol].getType() == Chess.INT_FLAG) {
                 return 1;
             }
@@ -259,8 +263,8 @@ public class GameBoard {
         boolean blnExistPlayer1 = false;
         boolean blnExistPlayer2 = false;
 
-        for (int intRow = 0; intRow < INT_ROWS; intRow++) {
-            for (int intCol = 0; intCol < INT_COLS; intCol++) {
+        for (int intRow = 1; intRow <= INT_ROWS; intRow++) {
+            for (int intCol = 1; intCol <= INT_COLS; intCol++) {
                 if (board[intRow][intCol].getPlayer() == 1 && board[intRow][intCol].getType() == Chess.INT_FLAG) {
                     blnExistPlayer1 = true;
                 }
