@@ -4,6 +4,8 @@ import generals.network.XSocket;
 import generals.util.Coordinate;
 import generals.util.log.Loggable;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 import static generals.network.Messages.*;
@@ -135,6 +137,7 @@ public class GameController implements Loggable {
         // if someone has won
         if ((intWinner = winner()) != 0) {
             messageController.sendMessage(String.format(STR_WINNING_MESSAGE, strPlayerName[intWinner]));
+
             reset();
             restartGame();
         }

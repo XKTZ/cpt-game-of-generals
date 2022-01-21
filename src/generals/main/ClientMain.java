@@ -3,13 +3,11 @@ package generals.main;
 import generals.backend.Chess;
 import generals.backend.GameBoard;
 import generals.frontend.GameService;
-import generals.frontend.ui.ChessBoardPanel;
+import generals.frontend.ui.*;
 import generals.frontend.ChessContainer;
-import generals.frontend.ui.ChessPanel;
-import generals.frontend.ui.NotPutChessPanel;
-import generals.frontend.ui.PiecePickPanel;
 import generals.network.XSocket;
 import generals.util.log.Loggable;
+import jdk.swing.interop.SwingInterOpUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,10 +36,38 @@ public class ClientMain extends JFrame implements Runnable {
 
     private ChessBoardPanel chessBoard;
 
+    private HelpPanel helpPanel;
+
     private PiecePickPanel piecePickPanel;
+
+    private JButton buttonHelpGameBoard;
 
     public ClientMain() {
         super("Games of Generals");
+
+        helpPanel = new HelpPanel();
+        helpPanel.setLocation(0, 0);
+
+        buttonHelpGameBoard = new JButton("Help");
+        buttonHelpGameBoard.setSize(380, 40);
+        buttonHelpGameBoard.setLocation(900, 300);
+        buttonHelpGameBoard.addActionListener((e) -> {
+            // if it is on help panel mode
+            if (Arrays.asList(this.getContentPane().getComponents()).contains(helpPanel)) {
+                System.out.println("Case A");
+                this.remove(helpPanel);
+                this.add(chessBoard);
+                buttonHelpGameBoard.setText("Help");
+            } else if (Arrays.asList(this.getContentPane().getComponents()).contains(chessBoard)) {
+                System.out.println("Case B");
+                this.remove(chessBoard);
+                this.add(helpPanel);
+                buttonHelpGameBoard.setText("Chess Board");
+            }
+            this.getContentPane().repaint();
+        });
+        add(buttonHelpGameBoard);
+
         setPreferredSize(new Dimension(1280, 720));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(null);
@@ -107,6 +133,7 @@ public class ClientMain extends JFrame implements Runnable {
         add(chessBoard);
 
         add(piecePickPanel);
+
 
         pack();
         setVisible(true);

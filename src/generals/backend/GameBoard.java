@@ -106,7 +106,6 @@ public class GameBoard {
         // if chess < chess move to, it got killed
         else {
             board[intXOn][intYOn] = Chess.EMPTY;
-            board[intXTo][intYTo] = chess;
         }
 
         switchTurn();

@@ -97,10 +97,10 @@ public class Chess {
             return 0;
         }
         if (a.isEmpty() && !b.isEmpty()) {
-            return 1;
+            return -1;
         }
         if (!a.isEmpty() && b.isEmpty()) {
-            return -1;
+            return 1;
         }
 
         // compare a with b
@@ -110,18 +110,18 @@ public class Chess {
         if (a.intType == INT_SPY) {
             // if b is private, a lose
             if (b.intType != INT_PRIVATE) {
-                return -1;
-            } else { // otherwise, a win
                 return 1;
+            } else { // otherwise, a win
+                return -1;
             }
         }
         // if b is spy
         if (b.intType == INT_SPY) {
             // if a is private, a win
             if (a.intType == INT_PRIVATE) {
-                return 1;
-            } else { // a lose
                 return -1;
+            } else { // a lose
+                return 1;
             }
         }
 
