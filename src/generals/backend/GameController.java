@@ -18,11 +18,6 @@ import static generals.network.Messages.*;
 public class GameController implements Loggable {
 
     /**
-     * Game start message
-     */
-    private static final String STR_GAME_START = "start";
-
-    /**
      * Board update message
      */
     private static final String STR_BOARD_UPDATE = "update";
@@ -31,6 +26,11 @@ public class GameController implements Loggable {
      * Winning message
      */
     private static final String STR_WINNING_MESSAGE = "Player %s has won the game!";
+
+    /**
+     * Game Start Message
+     */
+    private static final String STR_MESSAGE_GAME_START = "Game started, player %s please move";
 
     /**
      * Game board
@@ -102,6 +102,7 @@ public class GameController implements Loggable {
             intReadyCount = 0;
             // start the game
             socket.request(messageOf(STR_GAME_START));
+            messageController.sendMessage(String.format(STR_MESSAGE_GAME_START, strPlayerName[1]));
         }
     }
 
@@ -249,6 +250,15 @@ public class GameController implements Loggable {
     }
 
     /**
+     * Get the name of player
+     * @param intPlayer the player
+     * @return the name
+     */
+    public String nameOf(int intPlayer) {
+        return strPlayerName[intPlayer];
+    }
+
+    /**
      * Get the coordinate
      *
      * @param intPlayer player
@@ -264,5 +274,6 @@ public class GameController implements Loggable {
             return Coordinate.of(GameBoard.INT_ROWS + 1 - intX, GameBoard.INT_COLS + 1 - intY);
         }
     }
+
 
 }

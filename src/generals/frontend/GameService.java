@@ -73,7 +73,7 @@ public class GameService {
                 // if the scroll pane's viewpoint is empty
                 if (((JPanel) scrollPane.getViewport().getView()).getComponents().length == 0) {
                     scrollPane.getViewport().remove(scrollPane.getViewport().getView());
-                    scrollPane.getViewport().add(new JButton("Ready"){{
+                    scrollPane.getViewport().add(new JButton("Ready") {{
                         addActionListener((e) -> {
                             socket.request(messageOf(STR_READY));
                             this.setEnabled(false);
@@ -126,6 +126,16 @@ public class GameService {
      */
     public void move(int intX, int intY, int intXTo, int intYTo) {
         socket.request(messageOf(STR_MOVE, intPlayer, intX, intY, intXTo, intYTo), (ignored) -> {
+        });
+    }
+
+    /**
+     * Send a message
+     *
+     * @param strMsg the message
+     */
+    public void message(String strMsg) {
+        socket.request(messageOf(STR_SEND_MESSAGE, intPlayer, strMsg), (ignored) -> {
         });
     }
 

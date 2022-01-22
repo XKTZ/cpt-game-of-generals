@@ -22,7 +22,7 @@ import static generals.network.Messages.*;
  * @author Yidi Chen
  * @date 2021-12-28
  */
-public class ClientMain extends JFrame implements Runnable {
+public class ClientMain extends JFrame {
 
     public static String createName() {
         return String.valueOf(System.currentTimeMillis()) + String.valueOf(Math.random());
@@ -42,50 +42,126 @@ public class ClientMain extends JFrame implements Runnable {
 
     private JButton buttonHelpGameBoard;
 
+    private ChatArea chatArea;
+
+    private ConnectionPanel connectionPanel;
+
     public ClientMain() {
         super("Games of Generals");
 
+        initHelpPanel();
+        add(helpPanel);
+        initConnectPanel();
+        add(connectionPanel);
+        initContainer();
+
+        setPreferredSize(new Dimension(1280, 720));
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLayout(null);
+    }
+
+    private void initHelpPanel() {
         helpPanel = new HelpPanel();
         helpPanel.setLocation(0, 0);
+    }
 
+    private void initButtonHelpGameBoard() {
         buttonHelpGameBoard = new JButton("Help");
         buttonHelpGameBoard.setSize(380, 40);
         buttonHelpGameBoard.setLocation(900, 300);
         buttonHelpGameBoard.addActionListener((e) -> {
             // if it is on help panel mode
             if (Arrays.asList(this.getContentPane().getComponents()).contains(helpPanel)) {
-                System.out.println("Case A");
                 this.remove(helpPanel);
                 this.add(chessBoard);
                 buttonHelpGameBoard.setText("Help");
             } else if (Arrays.asList(this.getContentPane().getComponents()).contains(chessBoard)) {
-                System.out.println("Case B");
                 this.remove(chessBoard);
                 this.add(helpPanel);
                 buttonHelpGameBoard.setText("Chess Board");
             }
             this.getContentPane().repaint();
         });
-        add(buttonHelpGameBoard);
+    }
 
-        setPreferredSize(new Dimension(1280, 720));
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLayout(null);
+    private void initChatArea() {
+        chatArea = new ChatArea(gameService);
+        chatArea.setLocation(900, 0);
+    }
 
-        this.sock = new XSocket(createName(), "localhost", 8888, (strData, ignored) -> {
+    private void initContainer() {
+        container = new ChessContainer();
+    }
+
+    private void initConnectPanel() {
+        connectionPanel = new ConnectionPanel();
+        connectionPanel.setLocation(900, 160);
+        connectionPanel.setThen((strIP, strName) -> {
+            initNetwork(strIP, strName);
+            return null;
+        });
+    }
+
+    private void initNetwork(String strIP, String strName) {
+        // create sock
+        this.sock = new XSocket(createName(), strIP, 8888, (strData, ignored) -> {
             if (strData[0].equals(STR_UPDATE)) {
                 refresh();
             }
             if (strData[0].equals(STR_RESTART)) {
                 this.remove(chessBoard);
                 this.remove(piecePickPanel);
-                chessBoard = getChessBoard();
-                piecePickPanel = getPiecePickPanel();
+                initChessBoard();
+                initPiecePickPanel();
                 this.add(chessBoard);
                 this.add(piecePickPanel);
                 refresh();
             }
+            if (strData[0].equals(STR_MESSAGE)) {
+                this.chatArea.println(String.join(" ", Arrays.copyOfRange(strData, 1, strData.length)));
+            }
         });
+        sock.connect();
+        // create game service
+        gameService = new GameService(sock);
+        // connect
+        gameService.connect(strName);
+
+        // remove the connection panel
+        remove(connectionPanel);
+
+        // add the game components
+        initButtonHelpGameBoard();
+        add(buttonHelpGameBoard);
+
+        initChatArea();
+        add(chatArea);
+
+        initChessBoard();
+        remove(helpPanel);
+        add(chessBoard);
+        buttonHelpGameBoard.setText("Help");
+
+        initPiecePickPanel();
+        add(piecePickPanel);
+
+        repaint();
+        pack();
+
+        // refresh
+        refresh();
+    }
+
+    private void initChessBoard() {
+        chessBoard = new ChessBoardPanel(container, gameService) {{
+            setLocation(0, 0);
+        }};;
+    }
+
+    private void initPiecePickPanel() {
+        piecePickPanel = new PiecePickPanel(chessBoard, gameService) {{
+            setLocation(900, 340);
+        }};
     }
 
     private void refresh() {
@@ -116,44 +192,11 @@ public class ClientMain extends JFrame implements Runnable {
         });
     }
 
-    @Override
-    public void run() {
-        sock.connect();
-
-        gameService = new GameService(sock);
-
-        gameService.connect("yidi");
-
-        container = new ChessContainer();
-
-        chessBoard = getChessBoard();
-
-        piecePickPanel = getPiecePickPanel();
-
-        add(chessBoard);
-
-        add(piecePickPanel);
-
-
-        pack();
-        setVisible(true);
-    }
-
-    private ChessBoardPanel getChessBoard() {
-        return new ChessBoardPanel(container, gameService) {{
-            setLocation(0, 0);
-        }};
-    }
-
-    private PiecePickPanel getPiecePickPanel() {
-        return new PiecePickPanel() {{
-            init(chessBoard, gameService);
-            setLocation(900, 340);
-        }};
-    }
-
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        new ClientMain().run();
+        new ClientMain(){{
+            pack();
+            setVisible(true);
+        }};
     }
 }

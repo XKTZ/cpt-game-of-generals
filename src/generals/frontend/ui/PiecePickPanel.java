@@ -24,13 +24,10 @@ public class PiecePickPanel extends JPanel {
 
     private JPanel piecePickingPane;
 
-    public PiecePickPanel() {
+    public PiecePickPanel(ChessBoardPanel chessBoardPanel, GameService gameService) {
         super(new BorderLayout());
         setSize(380, 380);
         setBorder(PADDING);
-    }
-
-    public void init(ChessBoardPanel chessBoardPanel, GameService gameService) {
         // add all things into pane
         piecePickingPane = new JPanel(new FlowLayout(FlowLayout.LEADING, 5, 5));
         piecePickingPane.setPreferredSize(new Dimension(320, 1000));

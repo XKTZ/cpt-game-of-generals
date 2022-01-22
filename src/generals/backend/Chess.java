@@ -117,8 +117,8 @@ public class Chess {
         }
         // if b is spy
         if (b.intType == INT_SPY) {
-            // if a is private, a win
-            if (a.intType == INT_PRIVATE) {
+            // if a is not private, a lose
+            if (a.intType != INT_PRIVATE) {
                 return -1;
             } else { // a lose
                 return 1;

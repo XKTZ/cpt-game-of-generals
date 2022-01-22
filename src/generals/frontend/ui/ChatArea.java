@@ -1,5 +1,7 @@
 package generals.frontend.ui;
 
+import generals.frontend.GameService;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,36 +11,45 @@ import java.awt.*;
  */
 public class ChatArea extends JPanel {
 
-    private static final Font fnt = new Font("Times New Roman", Font.PLAIN, 12);
+    private static final Font fnt = new Font("Times New Roman", Font.PLAIN, 15);
 
     /**
      * Scroll pane
      */
-    JScrollPane scrollPane;
+    private JScrollPane scrollPane;
 
     /**
      * Text field
      */
-    JTextArea text;
+    private JTextArea text;
 
     /**
      * Input
      */
-    JTextField input;
+    private JTextField input;
+
+    /**
+     * Game Service
+     */
+    private GameService gameService;
 
     /**
      * Create the chat area
      */
-    public ChatArea() {
+    public ChatArea(GameService gameService) {
         super(null);
 
+        this.gameService = gameService;
+
         setSize(380, 300);
+
         // set text
         text = new JTextArea();
         text.setSize(380, 260);
         text.setLocation(0, 0);
         text.setLineWrap(true);
         text.setFont(fnt);
+        text.setEditable(false);
         scrollPane = new JScrollPane(text);
         scrollPane.setSize(380, 260);
         scrollPane.setLocation(0, 0);
@@ -48,6 +59,9 @@ public class ChatArea extends JPanel {
         input.setSize(380, 40);
         input.setLocation(0, 260);
         input.setFont(fnt);
+        input.addActionListener((e) -> {
+            gameService.message(input.getText());
+        });
 
         this.add(scrollPane);
         this.add(input);
@@ -59,5 +73,6 @@ public class ChatArea extends JPanel {
     public void println(String strMsg) {
         text.append(strMsg);
         text.append("\n");
+        input.setText("");
     }
 }

@@ -32,6 +32,8 @@ public interface Messages {
 
     String STR_RESTART = "restart";
 
+    String STR_GAME_START = "start";
+
     /**
      * Turn variadic args to array
      *

@@ -39,6 +39,7 @@ public class ServerMain implements Runnable {
         sock = new XSocket(INT_PORT, new RequestHandler() {
             @Override
             public void response(String[] strData, Consumer<String[]> responder) {
+
                 // connect
                 if (strData[0].equals(STR_CONNECT)) {
                     responder.accept(messageOf(connect(strData[1])));
@@ -107,8 +108,9 @@ public class ServerMain implements Runnable {
                 }
                 // message
                 if (strData[0].equals(STR_SEND_MESSAGE)) {
-                    String[] strMessage = Arrays.copyOfRange(strData, 1, strData.length);
-                    messageController.sendMessage(String.join(" ", strMessage));
+                    String strName = gameController.nameOf(Integer.parseInt(strData[1]));
+                    String[] strMessage = Arrays.copyOfRange(strData, 2, strData.length);
+                    messageController.sendMessage(strName + ": " + String.join(" ", strMessage));
                     responder.accept(messageOf(1));
                 }
             }
