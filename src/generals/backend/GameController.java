@@ -138,7 +138,7 @@ public class GameController implements Loggable {
         if ((intWinner = winner()) != 0) {
             messageController.sendMessage(String.format(STR_WINNING_MESSAGE, strPlayerName[intWinner]));
             try{
-                PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter("winner.txt", true)));
+                PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter("winner/winner.txt", true)));
                 //does not have user inputted name yet
                 printWriter.println(strPlayerName[intWinner]);
                 printWriter.close();
