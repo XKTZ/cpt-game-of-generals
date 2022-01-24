@@ -30,7 +30,7 @@ public class GameController implements Loggable {
     /**
      * Game Start Message
      */
-    private static final String STR_MESSAGE_GAME_START = "Game started, player %s please move";
+    private static final String STR_MESSAGE_GAME_START = "Game started, player %s move";
 
     /**
      * Game board

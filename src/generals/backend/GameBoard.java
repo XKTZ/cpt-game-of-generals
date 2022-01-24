@@ -2,7 +2,6 @@ package generals.backend;
 
 import generals.util.Coordinate;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -330,6 +329,10 @@ public class GameBoard {
         return intFrom <= intV && intV <= intTo;
     }
 
+    /**
+     * Get the whole board
+     * @return the whole board
+     */
     public Chess[][] getBoard() {
         return board;
     }

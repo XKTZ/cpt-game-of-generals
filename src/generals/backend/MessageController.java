@@ -23,6 +23,11 @@ public class MessageController {
     public MessageController() {
     }
 
+    /**
+     * Set teh socket of message controller
+     *
+     * @param socket the socket of message controller
+     */
     public void setSocket(XSocket socket) {
         this.socket = socket;
     }

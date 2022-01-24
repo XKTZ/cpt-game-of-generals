@@ -1,2 +1,0 @@
-1. Do we need to show what is the available positions moving to?
-2. Is the random number name ok?

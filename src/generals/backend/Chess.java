@@ -30,6 +30,9 @@ public class Chess {
     public static final int INT_GENERAL = 14;
     public static final int INT_GENERAL_OF_THE_ARMY = 15;
 
+    /**
+     * Empty chess
+     */
     public static final Chess EMPTY = new Chess(0, INT_EMPTY_SPACE);
 
     /**
@@ -45,8 +48,8 @@ public class Chess {
     /**
      * Creating chess by providing coordinate, player, and level
      *
-     * @param intPlayer  player
-     * @param intType    type
+     * @param intPlayer player
+     * @param intType   type
      */
     public Chess(int intPlayer, int intType) {
         this.intPlayer = intPlayer;
@@ -133,6 +136,11 @@ public class Chess {
         }
     }
 
+    /**
+     * To string method
+     *
+     * @return return the chess string
+     */
     @Override
     public String toString() {
         return String.format("%d-%d", intPlayer, intType);
