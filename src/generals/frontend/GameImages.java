@@ -3,10 +3,17 @@ package generals.frontend;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
+/**
+ * interface store all images
+ *
+ * @author Yidi Chen
+ * @date 2022-01-25
+ */
 public interface GameImages {
 
-    BufferedImage IMAGE_FLAG = imageOf("/img/1-flag.png");
-
+    /**
+     * Image of all levels, from flag to 5 star general
+     */
     BufferedImage[] LEVEL_IMAGES = new BufferedImage[]{
             null,
             imageOf("/img/1-flag.png"),
@@ -26,12 +33,26 @@ public interface GameImages {
             imageOf("/img/15-5-star-general.png")
     };
 
+    /**
+     * Image of flag
+     */
+    BufferedImage IMAGE_FLAG = LEVEL_IMAGES[1];
+
+
+    /**
+     * Get an image from path
+     *
+     * @param path path
+     * @return image
+     */
     static BufferedImage imageOf(String path) {
         try {
+            // read image
             BufferedImage image = ImageIO.read(GameImages.class.getResourceAsStream(path));
             return image;
         } catch (Exception e) {
             e.printStackTrace();
+            // return null
             return null;
         }
     }

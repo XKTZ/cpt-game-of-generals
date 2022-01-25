@@ -6,16 +6,36 @@ package generals.frontend;
  */
 public class ChessContainer {
 
-    private int intX, intY;
+    /**
+     * X axis of chess container
+     */
+    private int intX;
 
+    /**
+     * Y axis of chess container
+     */
+    private int intY;
+
+    /**
+     * Create empty chess container
+     */
     public ChessContainer() {
-
     }
 
+    /**
+     * Get x axis
+     *
+     * @return x axis
+     */
     public int getX() {
         return intX;
     }
 
+    /**
+     * Get y axis
+     *
+     * @return y axis
+     */
     public int getY() {
         return intY;
     }

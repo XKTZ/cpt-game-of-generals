@@ -3,6 +3,8 @@ package generals.network;
 import java.util.Arrays;
 
 /**
+ * Store all the messages
+ *
  * @author Yidi Chen
  * @date 2022-01-18
  */

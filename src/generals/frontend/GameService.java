@@ -1,27 +1,35 @@
 package generals.frontend;
 
-import generals.backend.GameBoard;
 import generals.frontend.ui.NotPutChessPanel;
-import generals.network.Messages;
 import generals.network.XSocket;
 import generals.util.Coordinate;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.function.Consumer;
 
 import static generals.network.Messages.*;
 
 /**
+ * Service of game (communication between client and server)
+ *
  * @author Yidi Chen
  * @date 2022-01-18
  */
 public class GameService {
 
+    /**
+     * Socket
+     */
     private XSocket socket;
 
+    /**
+     * Player
+     */
     private int intPlayer;
 
+    /**
+     * Player name
+     */
     private String strPlayerName;
 
     /**
@@ -39,8 +47,11 @@ public class GameService {
      * @param strName name
      */
     public void connect(String strName) {
+        // connect by providing name
         this.strPlayerName = strName;
+        // request connect
         socket.request(messageOf(STR_CONNECT, strName), (resp) -> {
+            // set player
             intPlayer = Integer.parseInt(resp[0]);
         });
     }
@@ -49,6 +60,7 @@ public class GameService {
      * Connect to server
      */
     public void ready() {
+        // request ready
         socket.request(messageOf(STR_READY));
     }
 
@@ -60,10 +72,16 @@ public class GameService {
      * @param intType type
      */
     public void put(int intX, int intY, int intType, NotPutChessPanel notPutChessPanel) {
+        // request to put
         socket.request(messageOf(STR_PUT, intPlayer, intType, intX, intY), (resp) -> {
+            // if put success
             if (Integer.parseInt(resp[0]) == INT_SUCCESS) {
+                // remove the chess from the piece picking panel
+                // get parent
                 var parent = notPutChessPanel.getParent();
+                // remove it
                 parent.remove(notPutChessPanel);
+                // refresh scroll pane
                 JScrollPane scrollPane = (JScrollPane) parent.getParent().getParent();
                 int valueOld = scrollPane.getVerticalScrollBar().getValue();
                 // scroll it a bit
@@ -72,6 +90,7 @@ public class GameService {
 
                 // if the scroll pane's viewpoint is empty
                 if (((JPanel) scrollPane.getViewport().getView()).getComponents().length == 0) {
+                    // change it by button, pressing ready
                     scrollPane.getViewport().remove(scrollPane.getViewport().getView());
                     scrollPane.getViewport().add(new JButton("Ready") {{
                         addActionListener((e) -> {
@@ -125,6 +144,7 @@ public class GameService {
      * @param intYTo yto
      */
     public void move(int intX, int intY, int intXTo, int intYTo) {
+        // request move
         socket.request(messageOf(STR_MOVE, intPlayer, intX, intY, intXTo, intYTo), (ignored) -> {
         });
     }
@@ -135,10 +155,16 @@ public class GameService {
      * @param strMsg the message
      */
     public void message(String strMsg) {
+        // request send message
         socket.request(messageOf(STR_SEND_MESSAGE, intPlayer, strMsg), (ignored) -> {
         });
     }
 
+    /**
+     * Get player
+     *
+     * @return player
+     */
     public int getPlayer() {
         return intPlayer;
     }

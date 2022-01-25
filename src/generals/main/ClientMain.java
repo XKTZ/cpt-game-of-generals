@@ -2,17 +2,14 @@ package generals.main;
 
 import generals.backend.Chess;
 import generals.backend.GameBoard;
+import generals.frontend.ChessContainer;
 import generals.frontend.GameService;
 import generals.frontend.ui.*;
-import generals.frontend.ChessContainer;
 import generals.network.XSocket;
-import generals.util.log.Loggable;
-import jdk.swing.interop.SwingInterOpUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static generals.network.Messages.*;
 
@@ -83,6 +80,9 @@ public class ClientMain extends JFrame {
      */
     private AnimatePanel animatePanel;
 
+    /**
+     * Constructor of client main
+     */
     public ClientMain() {
         super("Games of Generals");
 
@@ -97,6 +97,7 @@ public class ClientMain extends JFrame {
         add(animatePanel);
         animatePanel.start();
 
+        // pack
         pack();
     }
 

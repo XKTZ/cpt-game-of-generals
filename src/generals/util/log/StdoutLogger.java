@@ -18,7 +18,6 @@ public class StdoutLogger implements Logger {
      * Construct a stdout logger
      */
     public StdoutLogger() {
-
     }
 
     /**

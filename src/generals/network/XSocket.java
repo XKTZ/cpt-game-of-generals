@@ -124,15 +124,20 @@ public class XSocket implements AutoCloseable {
     private String strName;
 
     /**
-     * Lock
+     * Lock for listener
      */
-    ReentrantLock lock = new ReentrantLock();
+    private ReentrantLock lockListener = new ReentrantLock();
+
+    /**
+     * Lock for request
+     */
+    private ReentrantLock lockRequest = new ReentrantLock();
 
     /**
      * the listener
      */
     ActionListener listener = (e) -> {
-        lock.lock();
+        lockListener.lock();
 
         // gain the data and split them
         String[] strData = ssm.readText().split(STR_MESSAGE_SPLITTER);
@@ -163,7 +168,7 @@ public class XSocket implements AutoCloseable {
             responseHandler.accept(strDataCut);
         }
 
-        lock.unlock();
+        lockListener.unlock();
     };
 
     /**
@@ -207,19 +212,25 @@ public class XSocket implements AutoCloseable {
 
     /**
      * Method for only requesting, not response
+     *
      * @param strMsgs strMessage
      */
     public synchronized void request(String[] strMsgs) {
+        lockRequest.lock();
+        // check if it is server or client
         if (isServer()) {
+            // if server, send all
             ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
                     STR_TYPE_REQUEST, intIdOn.get(), strName, STR_RECEIVER_ALL,
                     String.join(STR_MESSAGE_SPLITTER, strMsgs)));
         } else {
+            // if client, send server
             ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
                     STR_TYPE_REQUEST, intIdOn.get(), strName, STR_SERVER_NAME,
                     String.join(STR_MESSAGE_SPLITTER, strMsgs)));
         }
         intIdOn.incrementAndGet();
+        lockRequest.unlock();
     }
 
     /**
@@ -229,17 +240,24 @@ public class XSocket implements AutoCloseable {
      * @param then    the thing to do after gaining the response
      */
     public synchronized void request(String[] strMsgs, Consumer<String[]> then) {
+        lockRequest.lock();
+        // put into handler
         responseHandlers.put(intIdOn.get(), then);
+        // check if it is server or client
         if (isServer()) {
+            // if server, send to all
             ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
                     STR_TYPE_REQUEST, intIdOn.get(), strName, STR_RECEIVER_ALL,
                     String.join(STR_MESSAGE_SPLITTER, strMsgs)));
         } else {
+            // if client, send to server
             ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
                     STR_TYPE_REQUEST, intIdOn.get(), strName, STR_SERVER_NAME,
                     String.join(STR_MESSAGE_SPLITTER, strMsgs)));
         }
+        // increase
         intIdOn.incrementAndGet();
+        lockRequest.unlock();
     }
 
     /**
@@ -250,11 +268,16 @@ public class XSocket implements AutoCloseable {
      * @param then    the thing to do after gaining the response
      */
     public synchronized void request(String strDest, String[] strMsgs, Consumer<String[]> then) {
+        lockRequest.lock();
+        // put the handler
         responseHandlers.put(intIdOn.get(), then);
+        // send request
         ssm.sendText(String.format(STR_FORMAT_SENDER_MESSAGE,
                 STR_TYPE_REQUEST, intIdOn.get(), strName, strDest,
                 String.join(STR_MESSAGE_SPLITTER, strMsgs)));
+        // increase int id
         intIdOn.incrementAndGet();
+        lockRequest.unlock();
     }
 
     /**
