@@ -1,0 +1,1 @@
+If you want to start the game, please at first open the server file, then use two clients to connect the server side.
