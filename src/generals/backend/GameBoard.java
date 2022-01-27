@@ -14,7 +14,15 @@ import java.util.List;
  */
 public class GameBoard {
 
-    public static final int INT_ROWS = 8, INT_COLS = 9;
+    /**
+     * The number of rows in the game board
+     */
+    public static final int INT_ROWS = 8;
+
+    /**
+     * The number of columns in the game board
+     */
+    public static final int INT_COLS = 9;
 
     /**
      * Displacement x
