@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The game board
+ * The game board in model layer
  *
  * @author Yidi Chen
  * @date 2022-01-11
